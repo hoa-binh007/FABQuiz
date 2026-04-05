@@ -293,19 +293,153 @@
   }
 
   const rawQuestions = [
-    {
-      nr: 1,
-      q: "Platzhalterfrage für Fach 4",
-      e: "Hier kommt später deine echte Erklärung bzw. Antwort hinein.",
-      o: [
-        "Platzhalterantwort A",
-        "Platzhalterantwort B",
-        "Platzhalterantwort C",
-        "Platzhalterantwort D"
-      ],
-      correctText: "Platzhalterantwort A"
-    }
-  ];
+  {
+    nr: 1,
+    q: "Wie kommt ein Vertrag zustande?",
+    e: "Ein Vertrag entsteht durch Angebot und Annahme, also durch zwei- oder mehrseitige übereinstimmende Willenserklärungen.",
+    o: [
+      "Nur durch eine einseitige Willenserklärung",
+      "Durch Angebot und Annahme (zwei- oder mehrseitige Willenserklärungen)",
+      "Ausschließlich durch schriftliche Unterzeichnung beim Notar",
+      "Indem man eine Ware ohne Bezahlung mitnimmt"
+    ],
+    correctText: "Durch Angebot und Annahme (zwei- oder mehrseitige Willenserklärungen)"
+  },
+  {
+    nr: 2,
+    q: "Welche Pflichten haben Käufer und Verkäufer bei einem Kaufvertrag?",
+    e: "Der Käufer muss zahlen und das Gut annehmen; der Verkäufer muss mangelfreies Gut übereignen.",
+    o: [
+      "Käufer: mangelfreie Ware liefern; Verkäufer: Ware annehmen",
+      "Käufer: zahlen und Gut annehmen; Verkäufer: mangelfreies Gut übereignen",
+      "Beide müssen nur die Rechnung unterschreiben",
+      "Der Verkäufer hat keine Pflichten nach der Bezahlung"
+    ],
+    correctText: "Käufer: zahlen und Gut annehmen; Verkäufer: mangelfreies Gut übereignen"
+  },
+  {
+    nr: 5,
+    q: "Welche Vertragsarten kommen im Schwimmbad vor?",
+    e: "Typisch sind Bade-, Miet-, Leih-, Dienst-, Werk-, Kauf- und ggf. Pachtverträge.",
+    o: [
+      "Nur Arbeitsverträge und Versicherungsverträge",
+      "Badevertrag, Mietvertrag, Leihvertrag, Dienstvertrag, Werkvertrag, Kaufvertrag, ggf. Pachtvertrag",
+      "Ausschließlich der Tarifvertrag des öffentlichen Dienstes",
+      "Kreditverträge und Bausparverträge"
+    ],
+    correctText: "Badevertrag, Mietvertrag, Leihvertrag, Dienstvertrag, Werkvertrag, Kaufvertrag, ggf. Pachtvertrag"
+  },
+  {
+    nr: 10,
+    q: "Wie wird die Geschäftsfähigkeit nach BGB differenziert?",
+    e: "Geschäftsunfähig (bis 7 Jahre), beschränkt geschäftsfähig (7–17 Jahre) und voll geschäftsfähig (ab 18 Jahre).",
+    o: [
+      "Alle Menschen sind ab der Geburt voll geschäftsfähig",
+      "Geschäftsunfähig (bis 7 J.), beschränkt geschäftsfähig (7-17 J.), voll geschäftsfähig (ab 18 J.)",
+      "Man ist erst mit Abschluss einer Ausbildung geschäftsfähig",
+      "Nur wer ein eigenes Einkommen hat, ist geschäftsfähig"
+    ],
+    correctText: "Geschäftsunfähig (bis 7 J.), beschränkt geschäftsfähig (7-17 J.), voll geschäftsfähig (ab 18 J.)"
+  },
+  {
+    nr: 11,
+    q: "Was bedeutet 'Tarifautonomie'?",
+    e: "Tarifautonomie bedeutet, dass Gewerkschaften und Arbeitgeberverbände Tarifverträge ohne staatliche Einflussnahme selbstständig regeln.",
+    o: [
+      "Dass der Staat die Löhne für alle Betriebe festlegt",
+      "Selbstständige Regelung von Tarifverträgen durch Sozialpartner ohne staatliche Einflussnahme",
+      "Dass jeder Mitarbeiter seinen Lohn selbst mit dem Finanzamt aushandelt",
+      "Die Pflicht, Überstunden immer mit Freizeit auszugleichen"
+    ],
+    correctText: "Selbstständige Regelung von Tarifverträgen durch Sozialpartner ohne staatliche Einflussnahme"
+  },
+  {
+    nr: 15,
+    q: "Wie lautet Artikel 1 Absatz 1 des Grundgesetzes (GG)?",
+    e: "Die Würde des Menschen ist unantastbar. Sie zu achten und zu schützen ist Verpflichtung aller staatlichen Gewalt.",
+    o: [
+      "Eigentum verpflichtet",
+      "Die Würde des Menschen ist unantastbar. Sie zu achten und zu schützen ist Verpflichtung aller staatlichen Gewalt.",
+      "Alle Menschen sind vor dem Gesetz gleich",
+      "Jeder hat das Recht auf freie Entfaltung seiner Persönlichkeit"
+    ],
+    correctText: "Die Würde des Menschen ist unantastbar. Sie zu achten und zu schützen ist Verpflichtung aller staatlichen Gewalt."
+  },
+  {
+    nr: 17,
+    q: "Welche Abzüge werden vom Bruttolohn einbehalten?",
+    e: "Einbehalten werden Lohnsteuer, Kirchensteuer, Rentenversicherung, Arbeitslosenversicherung, Krankenversicherung und Pflegeversicherung.",
+    o: [
+      "Nur die Mehrwertsteuer und die Kfz-Steuer",
+      "Lohnsteuer, Kirchensteuer, RV, AV, KV und Pflegeversicherung",
+      "Ausschließlich die Miete und Stromkosten",
+      "Nur die Haftpflichtversicherung des Arbeitgebers"
+    ],
+    correctText: "Lohnsteuer, Kirchensteuer, RV, AV, KV und Pflegeversicherung"
+  },
+  {
+    nr: 18,
+    q: "Welche Aufgabe übernimmt die gesetzliche Unfallversicherung?",
+    e: "Sie übernimmt die Versorgung der Verunfallten sowie Unfallverhütung und Rehabilitation.",
+    o: [
+      "Zahlung von Krankengeld bei Grippe",
+      "Versorgung der Verunfallten, Unfallverhütung und Rehabilitation",
+      "Finanzierung des Zahnersatzes",
+      "Beratung im Pflegefall"
+    ],
+    correctText: "Versorgung der Verunfallten, Unfallverhütung und Rehabilitation"
+  },
+  {
+    nr: 22,
+    q: "Wann ist eine fristlose Kündigung zulässig?",
+    e: "Eine fristlose Kündigung ist bei Vorliegen eines wichtigen Grundes zulässig, zum Beispiel bei Diebstahl.",
+    o: [
+      "Wenn man einmal 5 Minuten zu spät kommt",
+      "Bei Vorlage eines wichtigen Grundes (z. B. Diebstahl)",
+      "Sobald man eine neue Stelle gefunden hat",
+      "Nur wenn der Betrieb wirtschaftliche Probleme hat"
+    ],
+    correctText: "Bei Vorlage eines wichtigen Grundes (z. B. Diebstahl)"
+  },
+  {
+    nr: 24,
+    q: "Wann beginnt die Rechtsfähigkeit einer natürlichen Person?",
+    e: "Die Rechtsfähigkeit beginnt mit der Vollendung der Geburt und endet mit dem Tod.",
+    o: [
+      "Mit dem 7. Lebensjahr",
+      "Mit der Vollendung der Geburt",
+      "Erst mit der Volljährigkeit (18 Jahre)",
+      "Sobald man einen Personalausweis besitzt"
+    ],
+    correctText: "Mit der Vollendung der Geburt"
+  },
+  {
+    nr: 27,
+    q: "Welche 5 Grundsätze gelten für die demokratische Wahl?",
+    e: "Die Wahl muss allgemein, unmittelbar, frei, gleich und geheim sein.",
+    o: [
+      "Öffentlich, teuer, verpflichtend, jährlich, schriftlich",
+      "Allgemein, unmittelbar, frei, gleich, geheim",
+      "Nur für Parteimitglieder, digital, gewichtet, offen, freiwillig",
+      "Zentral, indirekt, gebunden, ungleich, geschützt"
+    ],
+    correctText: "Allgemein, unmittelbar, frei, gleich, geheim"
+  },
+  {
+    nr: 28,
+    q: "Welche Personengruppen genießen besonderen Kündigungsschutz?",
+    e: "Besonderen Kündigungsschutz genießen Schwangere bzw. Mütter, Auszubildende, Schwerbehinderte und Mitglieder von Betriebsverfassungsorganen.",
+    o: [
+      "Alle Mitarbeiter in der Probezeit",
+      "Schwangere, Auszubildende, Schwerbehinderte, Mitglieder von Betriebsverfassungsorganen",
+      "Nur Mitarbeiter mit einem befristeten Vertrag",
+      "Ausschließlich die Geschäftsführung"
+    ],
+    correctText: "Schwangere, Auszubildende, Schwerbehinderte, Mitglieder von Betriebsverfassungsorganen"
+  }
+];
+
+
 
   const questions = shuffleArray(rawQuestions).map(q => {
     const shuffledOptions = shuffleArray(q.o);

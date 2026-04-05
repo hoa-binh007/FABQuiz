@@ -1,287 +1,3 @@
-<!DOCTYPE html>
-<html lang="de">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FAB Klausurtrainer - Fach 3</title>
-  <style>
-    :root {
-      --color-fach1: #ef4444;
-      --color-fach2: #3b82f6;
-      --color-fach3: #6b7280;
-      --color-fach4: #10b981;
-
-      --primary: var(--color-fach3);
-      --bg: #f8fafc;
-      --card-bg: #ffffff;
-      --text: #1e293b;
-      --muted: #64748b;
-      --green-bg: #dcfce7;
-      --green-border: #22c55e;
-      --green-text: #166534;
-      --red-bg: #fee2e2;
-      --red-border: #ef4444;
-      --red-text: #991b1b;
-    }
-
-    * {
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    body {
-      margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.5;
-    }
-
-    .container {
-      max-width: 860px;
-      margin: 0 auto;
-      padding: 15px;
-    }
-
-    .top-link {
-      display: inline-block;
-      margin: 10px 0 20px;
-      text-decoration: none;
-      color: var(--primary);
-      font-weight: bold;
-    }
-
-    .header {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
-    .badge {
-      display: inline-block;
-      padding: 4px 12px;
-      border-radius: 20px;
-      background: var(--primary);
-      color: white;
-      font-size: 12px;
-      font-weight: bold;
-      text-transform: uppercase;
-      margin-bottom: 8px;
-    }
-
-    .card {
-      background: var(--card-bg);
-      border-radius: 24px;
-      padding: 24px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
-      margin-bottom: 20px;
-    }
-
-    .progress-bar {
-      height: 6px;
-      background: #e2e8f0;
-      border-radius: 3px;
-      margin: 15px 0;
-      overflow: hidden;
-    }
-
-    .progress-fill {
-      height: 100%;
-      background: var(--primary);
-      width: 0%;
-      transition: width 0.3s ease;
-    }
-
-    .question-meta {
-      font-size: 14px;
-      color: var(--muted);
-      margin-bottom: 8px;
-    }
-
-    .question-text {
-      font-size: 22px;
-      font-weight: 800;
-      margin-bottom: 20px;
-      color: #0f172a;
-    }
-
-    .answers {
-      display: grid;
-      gap: 12px;
-    }
-
-    .answer-btn {
-      width: 100%;
-      text-align: left;
-      border: 2px solid #f1f5f9;
-      background: #f1f5f9;
-      border-radius: 16px;
-      padding: 18px;
-      cursor: pointer;
-      font-size: 16px;
-      font-weight: 500;
-      transition: all 0.2s;
-    }
-
-    .answer-btn:hover {
-      border-color: #cbd5e1;
-    }
-
-    .answer-btn.selected {
-      border-color: var(--primary);
-      background: white;
-    }
-
-    .answer-btn.correct {
-      background: var(--green-bg);
-      border-color: var(--green-border);
-      color: var(--green-text);
-    }
-
-    .answer-btn.wrong {
-      background: var(--red-bg);
-      border-color: var(--red-border);
-      color: var(--red-text);
-    }
-
-    .feedback {
-      margin-top: 20px;
-      padding: 15px;
-      border-radius: 16px;
-      background: #f8fafc;
-      font-size: 14px;
-      border-left: 4px solid var(--primary);
-    }
-
-    .controls {
-      display: flex;
-      gap: 10px;
-      margin-top: 30px;
-      flex-wrap: wrap;
-    }
-
-    .btn {
-      flex: 1;
-      min-width: 180px;
-      padding: 16px;
-      border-radius: 16px;
-      border: none;
-      font-weight: bold;
-      cursor: pointer;
-      font-size: 16px;
-      transition: transform 0.1s;
-    }
-
-    .btn:active {
-      transform: scale(0.98);
-    }
-
-    .btn-primary {
-      background: var(--primary);
-      color: white;
-    }
-
-    .btn-secondary {
-      background: #e2e8f0;
-      color: #475569;
-    }
-
-    .btn:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-
-    .grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      justify-content: center;
-      margin-top: 20px;
-    }
-
-    .grid-dot {
-      width: 38px;
-      height: 38px;
-      border-radius: 10px;
-      border: 1px solid #e2e8f0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 12px;
-      font-weight: bold;
-      background: white;
-      cursor: pointer;
-      color: var(--text);
-    }
-
-    .grid-dot.active {
-      border: 2px solid var(--primary);
-      color: var(--primary);
-    }
-
-    .grid-dot.correct {
-      background: var(--green-bg);
-      border-color: var(--green-border);
-      color: var(--green-text);
-    }
-
-    .grid-dot.wrong {
-      background: var(--red-bg);
-      border-color: var(--red-border);
-      color: var(--red-text);
-    }
-
-    .note {
-      margin-top: 10px;
-      font-size: 13px;
-      color: var(--muted);
-    }
-  </style>
-</head>
-<body>
-
-<div class="container">
-  <a class="top-link" href="index.html">← Zurück zur Startseite</a>
-
-  <div class="header">
-    <span class="badge">Fach 3</span>
-    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
-    <div style="font-size: 14px; color: #64748b;">
-      Frage <span id="qn">1</span> von <span id="total">0</span>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="question-meta" id="questionMeta">Frage wird geladen ...</div>
-    <div class="question-text" id="qText">Lade Fragen...</div>
-    <div class="answers" id="ansBox"></div>
-    <div id="fbBox" style="display:none"></div>
-
-    <div class="controls">
-      <button class="btn btn-secondary" id="btnPrev" onclick="changeQ(-1)">Zurück</button>
-      <button class="btn btn-secondary" id="btnNext" onclick="changeQ(1)">Weiter</button>
-    </div>
-  </div>
-
-  <div class="grid" id="qGrid"></div>
-
-  <div class="card">
-    <h3>Deine Übersicht</h3>
-    <p><strong>Modus:</strong> <span id="modeLabel">Alle Fragen</span></p>
-    <p><strong>Beantwortet:</strong> <span id="statsAnswered">0</span> / <span id="statsTotal">0</span></p>
-    <p><strong>Richtig:</strong> <span id="statsCorrect">0</span></p>
-    <p><strong>Falsch:</strong> <span id="statsWrong">0</span></p>
-
-    <div class="controls" style="margin-top:16px;">
-      <button class="btn btn-primary" onclick="startWrongRepeat()">Falsche Fragen wiederholen</button>
-      <button class="btn btn-secondary" onclick="showAllQuestions()">Alle Fragen</button>
-    </div>
-
-    <div class="note">
-      Platzhalter für Fach 3. Die echten Fragen fügst du später ein.
-    </div>
-  </div>
-</div>
-
 <script>
   function shuffleArray(array) {
     const copy = [...array];
@@ -295,21 +11,380 @@
   const rawQuestions = [
     {
       nr: 1,
-      q: "Platzhalterfrage für Fach 3",
-      e: "Hier kommt später deine echte Erklärung bzw. Antwort hinein.",
+      q: "Messwerte angeben: Welche Aussage ist richtig zu freiem Chlor, gebundenem Chlor, pH-Wert, Redox und Säurekapazität?",
+      e: "Freies Chlor ist zu niedrig (Richtwert 0,3–0,6 mg/l), gebundenes Chlor zu hoch (Richtwert < 0,2 mg/l), pH-Wert zu niedrig (Richtwert 6,5–7,5), Redox zu gering (Richtwert 750), Säurekapazität zu gering (Richtwert 0,3–0,7 mmol/l).",
       o: [
-        "Platzhalterantwort A",
-        "Platzhalterantwort B",
-        "Platzhalterantwort C",
-        "Platzhalterantwort D"
+        "Freies Chlor zu niedrig, gebundenes Chlor zu hoch, pH-Wert zu niedrig, Redox zu gering, Säurekapazität zu gering",
+        "Alle Werte liegen im Normalbereich",
+        "Nur der pH-Wert ist zu niedrig, alle anderen Werte stimmen",
+        "Nur das freie Chlor ist zu niedrig, alle anderen Werte stimmen"
       ],
-      correctText: "Platzhalterantwort A"
+      correctText: "Freies Chlor zu niedrig, gebundenes Chlor zu hoch, pH-Wert zu niedrig, Redox zu gering, Säurekapazität zu gering"
+    },
+    {
+      nr: 2,
+      q: "Was entsteht beim Einleiten von Chlorgas in Wasser?",
+      e: "Beim Einleiten von Chlorgas in Wasser entstehen unterchlorige Säure und Salzsäure.",
+      o: [
+        "Unterchlorige Säure und Salzsäure",
+        "Natronlauge und Wasserstoff",
+        "Ozon und Sauerstoff",
+        "Kohlensäure und Chloramine"
+      ],
+      correctText: "Unterchlorige Säure und Salzsäure"
+    },
+    {
+      nr: 3,
+      q: "Was ist freies wirksames Chlor?",
+      e: "Freies wirksames Chlor ist der Chloranteil, der sich noch nicht mit anderen Stoffen verbunden hat und als Desinfektionsreserve zur Verfügung steht.",
+      o: [
+        "Der Chloranteil, der sich noch nicht mit anderen Stoffen verbunden hat und als Desinfektionsreserve zur Verfügung steht",
+        "Chlor, das bereits mit Schweiß und Urin reagiert hat",
+        "Die gesamte Chlormenge im Lagerraum",
+        "Chlor, das keine Desinfektionswirkung mehr besitzt"
+      ],
+      correctText: "Der Chloranteil, der sich noch nicht mit anderen Stoffen verbunden hat und als Desinfektionsreserve zur Verfügung steht"
+    },
+    {
+      nr: 4,
+      q: "Was ist gebundenes wirksames Chlor?",
+      e: "Gebundenes wirksames Chlor entsteht durch Verbindung unter anderem mit Schweiß, Urin und Kosmetika. Es sind Chloramine und Chlorharnstoff mit geringer Desinfektionswirkung.",
+      o: [
+        "Chloramine und Chlorharnstoff mit geringer Desinfektionswirkung",
+        "Reines Chlorgas mit besonders hoher Wirkung",
+        "Die gesamte Desinfektionsreserve des Wassers",
+        "Ein Flockungsmittel zur Wasserklärung"
+      ],
+      correctText: "Chloramine und Chlorharnstoff mit geringer Desinfektionswirkung"
+    },
+    {
+      nr: 5,
+      q: "Was gibt die Redoxspannung an?",
+      e: "Die Höhe der positiven Redoxspannung gibt an, wie stark das Oxidationsmittel ist und wie schnell es wirkt.",
+      o: [
+        "Wie stark das Oxidationsmittel ist und wie schnell es wirkt",
+        "Wie hoch der pH-Wert in mg/l ist",
+        "Wie viel Flockungsmittel im Wasser ist",
+        "Wie schnell der Filter gespült wird"
+      ],
+      correctText: "Wie stark das Oxidationsmittel ist und wie schnell es wirkt"
+    },
+    {
+      nr: 6,
+      q: "Was ist das Ziel der Flockung?",
+      e: "Die Flockung hat das Ziel, die im Wasser vorhandenen Kolloide zu binden und auszuflocken, sodass sie anschließend gefiltert werden können.",
+      o: [
+        "Kolloide binden und ausflocken, damit sie gefiltert werden können",
+        "Den pH-Wert erhöhen",
+        "Das Wasser erwärmen",
+        "Die Umwälzpumpe entlasten"
+      ],
+      correctText: "Kolloide binden und ausflocken, damit sie gefiltert werden können"
+    },
+    {
+      nr: 7,
+      q: "Was bedeutet Absorption in der Wasseraufbereitung?",
+      e: "Absorption bezeichnet die Lösung von Gasen in Flüssigkeiten und festen Stoffen.",
+      o: [
+        "Die Lösung von Gasen in Flüssigkeiten und festen Stoffen",
+        "Die Anlagerung von Stoffen an Feststoffoberflächen",
+        "Das Rückspülen eines Filters",
+        "Die mechanische Entfernung grober Verschmutzungen"
+      ],
+      correctText: "Die Lösung von Gasen in Flüssigkeiten und festen Stoffen"
+    },
+    {
+      nr: 8,
+      q: "Was bedeutet Adsorption in der Wasseraufbereitung?",
+      e: "Adsorption bezeichnet die Anlagerung oder Anreicherung von flüssigen oder gasförmigen Stoffen an der Oberfläche von Feststoffen.",
+      o: [
+        "Die Anlagerung oder Anreicherung von Stoffen an der Oberfläche von Feststoffen",
+        "Die Lösung von Gasen in Flüssigkeiten",
+        "Die chemische Zersetzung von Chloraminen",
+        "Die Erwärmung des Beckenwassers"
+      ],
+      correctText: "Die Anlagerung oder Anreicherung von Stoffen an der Oberfläche von Feststoffen"
+    },
+    {
+      nr: 9,
+      q: "Welche Eigenschaften hat Aktivkornkohle auf Kokosnussschalenbasis?",
+      e: "Aktivkornkohle hat geringen Abrieb, große Härte und eine sehr große Adsorptionskapazität.",
+      o: [
+        "Geringer Abrieb, große Härte, sehr große Adsorptionskapazität",
+        "Weiches Material ohne Adsorptionswirkung",
+        "Löst sich schnell im Wasser auf",
+        "Dient nur zur pH-Wert-Anhebung"
+      ],
+      correctText: "Geringer Abrieb, große Härte, sehr große Adsorptionskapazität"
+    },
+    {
+      nr: 10,
+      q: "Welche Stoffe können als Flockungsmittel eingesetzt werden?",
+      e: "Zum Beispiel Aluminiumsulfat, Aluminiumchloridhexahydrat, Natriumaluminat, Polyaluminiumchloride, Eisen(III)-chlorid-Hexahydrat und Eisen(III)-Sulfate.",
+      o: [
+        "Aluminiumsulfat, Aluminiumchloridhexahydrat, Natriumaluminat, Polyaluminiumchloride, Eisen(III)-chlorid-Hexahydrat, Eisen(III)-Sulfate",
+        "Salzsäure, Schwefelsäure und Natronlauge",
+        "Ozon, Chlor und Sauerstoff",
+        "Marmorkies, Filtersand und Aktivkohle"
+      ],
+      correctText: "Aluminiumsulfat, Aluminiumchloridhexahydrat, Natriumaluminat, Polyaluminiumchloride, Eisen(III)-chlorid-Hexahydrat, Eisen(III)-Sulfate"
+    },
+    {
+      nr: 12,
+      q: "Was ist die Ultrafiltrations-Membran?",
+      e: "Die Ultrafiltrations-Membran besteht aus Polyethersulfon-Hohlfasern und wird Kapillar-Membran genannt. Weder Bakterien noch Viren können sie passieren.",
+      o: [
+        "Eine Kapillar-Membran aus Polyethersulfon-Hohlfasern, die weder Bakterien noch Viren passieren lässt",
+        "Ein Kiesbett zur Vorfiltration",
+        "Ein offener Sandfilter für grobe Partikel",
+        "Eine Dosieranlage für Flockungsmittel"
+      ],
+      correctText: "Eine Kapillar-Membran aus Polyethersulfon-Hohlfasern, die weder Bakterien noch Viren passieren lässt"
+    },
+    {
+      nr: 13,
+      q: "Welche chemischen Lösungen werden zum Spülen der Ultrafiltrations-Membran genutzt?",
+      e: "Wasser, Salzsäure, Natronlauge/Natriumhydroxid und Schwefelsäure.",
+      o: [
+        "Wasser, Salzsäure, Natronlauge/Natriumhydroxid und Schwefelsäure",
+        "Nur Leitungswasser",
+        "Nur Chlorbleichlauge und Ozonwasser",
+        "Flockungsmittel und Algizide"
+      ],
+      correctText: "Wasser, Salzsäure, Natronlauge/Natriumhydroxid und Schwefelsäure"
+    },
+    {
+      nr: 14,
+      q: "Was beschreibt der Transmembrandruck?",
+      e: "Der Transmembrandruck ist der Differenzdruck in der Ultrafiltration und beschreibt den Druckunterschied zwischen Feed- und Permeatseite der Membran.",
+      o: [
+        "Den Differenzdruck zwischen Feed- und Permeatseite der Membran",
+        "Den Druck im Beckenbodenablauf",
+        "Die Pumpenleistung in kW",
+        "Die Redoxspannung im Filtrat"
+      ],
+      correctText: "Den Differenzdruck zwischen Feed- und Permeatseite der Membran"
+    },
+    {
+      nr: 15,
+      q: "Welche Folgen haben zu niedrige Hygiene-Hilfsparameter?",
+      e: "Zum Beispiel trübes Wasser, glitschige Beckenwände, Algenwachstum und Nährboden für Viren und Keime.",
+      o: [
+        "Trübes Wasser, glitschige Beckenwände, Algenwachstum, Nährboden für Viren und Keime",
+        "Kristallklares Wasser und stabiler Betrieb",
+        "Automatische Desinfektion ohne Chemie",
+        "Nur eine höhere Wassertemperatur"
+      ],
+      correctText: "Trübes Wasser, glitschige Beckenwände, Algenwachstum, Nährboden für Viren und Keime"
+    },
+    {
+      nr: 16,
+      q: "Welche Fehler führen bei der photometrischen Messung zu falschen Ergebnissen?",
+      e: "Keine Nullprobe, falsche Anwendung der Färbungs-Reagenzien und Entnahme der Wasserprobe an der falschen Stelle.",
+      o: [
+        "Keine Nullprobe, falsche Anwendung der Färbungs-Reagenzien, falsche Probenentnahmestelle",
+        "Zu saubere Küvetten und korrekte Nullprobe",
+        "Messung bei 25 °C",
+        "Verwendung von Leitungswasser"
+      ],
+      correctText: "Keine Nullprobe, falsche Anwendung der Färbungs-Reagenzien, falsche Probenentnahmestelle"
+    },
+    {
+      nr: 18,
+      q: "Welche zwei Ursachen begünstigen Pseudomonas aeruginosa?",
+      e: "Wassertemperatur 36 ± 1 °C und stehendes Wasser in Totleitungen.",
+      o: [
+        "Wassertemperatur 36 ± 1 °C und stehendes Wasser in Totleitungen",
+        "Niedrige Temperatur und starke Durchströmung",
+        "Hohe Redoxspannung und niedriger pH-Wert",
+        "Nur Sonnenlicht"
+      ],
+      correctText: "Wassertemperatur 36 ± 1 °C und stehendes Wasser in Totleitungen"
+    },
+    {
+      nr: 19,
+      q: "Welche Maßnahmen werden bei zu hoher Konzentration von Pseudomonas aeruginosa genannt?",
+      e: "Alle Geräte und Leitungen beproben, durchspülen (thermische Desinfektion), Filtermaterial austauschen.",
+      o: [
+        "Geräte und Leitungen beproben, thermisch desinfizieren, Filtermaterial austauschen",
+        "Nur den pH-Wert senken",
+        "Nur Stoßchlorung durchführen",
+        "Becken 10 Minuten abdecken"
+      ],
+      correctText: "Geräte und Leitungen beproben, thermisch desinfizieren, Filtermaterial austauschen"
+    },
+    {
+      nr: 20,
+      q: "Welche drei Teilchengrößen bei Verschmutzung werden unterschieden?",
+      e: "Grobe Verschmutzung, feine Verschmutzung, gelöste Verschmutzung.",
+      o: [
+        "Grobe Verschmutzung, feine Verschmutzung, gelöste Verschmutzung",
+        "Nur grobe und gelöste Verschmutzung",
+        "Nur sichtbare und unsichtbare Verschmutzung",
+        "Staub, Sand und Schaum"
+      ],
+      correctText: "Grobe Verschmutzung, feine Verschmutzung, gelöste Verschmutzung"
+    },
+    {
+      nr: 23,
+      q: "Welche Filtermaterialien und Anwendungsbereiche werden genannt?",
+      e: "Filtersand und Kies für Siebwirkung und Adsorption ohne chemische Wirkung, Anthrazitkohle für sehr gute Adsorption, Kieselgur für großes Filterpotenzial, Korn-Aktivkohle und Pulver-Aktivkohle für Adsorption auch von Gasen sowie Geschmacks- und Geruchsstoffen.",
+      o: [
+        "Filtersand/Kies, Anthrazitkohle, Kieselgur, Korn-Aktivkohle, Pulver-Aktivkohle",
+        "Nur Marmorkies und Glasperlen",
+        "Nur Aktivkohle und Flockungsmittel",
+        "Nur Filtersand"
+      ],
+      correctText: "Filtersand/Kies, Anthrazitkohle, Kieselgur, Korn-Aktivkohle, Pulver-Aktivkohle"
+    },
+    {
+      nr: 24,
+      q: "Was sind Algen und wodurch wird ihr Wachstum begünstigt?",
+      e: "Algen sind niedere Pflanzen, benötigen Licht zum Wachsen und besitzen Chlorophyll. Phosphate im Badewasser begünstigen ihr Wachstum.",
+      o: [
+        "Niedere Pflanzen mit Chlorophyll; Licht und Phosphate begünstigen das Wachstum",
+        "Bakterien, die nur in Dunkelheit wachsen",
+        "Pilze, die nur in Totleitungen vorkommen",
+        "Mineralstoffe ohne Wachstum"
+      ],
+      correctText: "Niedere Pflanzen mit Chlorophyll; Licht und Phosphate begünstigen das Wachstum"
+    },
+    {
+      nr: 26,
+      q: "Welche Gebindegrößen werden für Chlorgasflaschen genannt?",
+      e: "50 kg, 65 kg und 500 kg.",
+      o: [
+        "50 kg, 65 kg und 500 kg",
+        "10 kg, 20 kg und 100 kg",
+        "100 kg, 250 kg und 1000 kg",
+        "Nur 65 kg"
+      ],
+      correctText: "50 kg, 65 kg und 500 kg"
+    },
+    {
+      nr: 29,
+      q: "Welche Pumpenarten werden genannt?",
+      e: "Umwälzpumpe, Dosierpumpe, Membranpumpe, Schlauchpumpe, Attraktionspumpe, Tauchpumpe, Förderpumpe.",
+      o: [
+        "Umwälzpumpe, Dosierpumpe, Membranpumpe, Schlauchpumpe, Attraktionspumpe, Tauchpumpe, Förderpumpe",
+        "Nur Fahrradpumpe und Luftpumpe",
+        "Nur Kolbenpumpe und Handpumpe",
+        "Nur Umwälzpumpe"
+      ],
+      correctText: "Umwälzpumpe, Dosierpumpe, Membranpumpe, Schlauchpumpe, Attraktionspumpe, Tauchpumpe, Förderpumpe"
+    },
+    {
+      nr: 30,
+      q: "Welche Hydraulik und welches Einsatzgebiet hat eine Umwälzpumpe?",
+      e: "Meist eine einstufige Kreiselpumpe. Das Wasser tritt axial in das Laufrad ein und wird radial nach außen geschleudert. Einsatzgebiet: kontinuierliche Reinigung des Beckenwassers.",
+      o: [
+        "Einstufige Kreiselpumpe zur kontinuierlichen Reinigung des Beckenwassers",
+        "Membranpumpe zur Dosierung von Säure",
+        "Vortexpumpe für Schlammwasser",
+        "Kolbenpumpe für Druckluft"
+      ],
+      correctText: "Einstufige Kreiselpumpe zur kontinuierlichen Reinigung des Beckenwassers"
+    },
+    {
+      nr: 31,
+      q: "Wie wird der pH-Wert definiert?",
+      e: "Der pH-Wert ist ein Maß für den sauren oder basischen Charakter einer wässrigen Lösung. Er gibt an, wie hoch die Konzentration an freien Wasserstoff-Ionen ist.",
+      o: [
+        "Maß für den sauren oder basischen Charakter einer wässrigen Lösung",
+        "Maß für den Chlorgehalt im Becken",
+        "Maß für die Trübung des Wassers",
+        "Maß für die Pumpendrehzahl"
+      ],
+      correctText: "Maß für den sauren oder basischen Charakter einer wässrigen Lösung"
+    },
+    {
+      nr: 32,
+      q: "Welche Stoffe werden als pH-Heber und pH-Senker genannt?",
+      e: "pH-Heber: Natronlauge, Natriumcarbonat (Soda), Natriumhydrogencarbonat. pH-Senker: Schwefelsäure, Salzsäure, Natriumhydrogensulfat.",
+      o: [
+        "Heber: Natronlauge, Soda, Natriumhydrogencarbonat; Senker: Schwefelsäure, Salzsäure, Natriumhydrogensulfat",
+        "Heber: Salzsäure; Senker: Natronlauge",
+        "Heber: Ozon; Senker: Aktivkohle",
+        "Nur Natronlauge"
+      ],
+      correctText: "Heber: Natronlauge, Soda, Natriumhydrogencarbonat; Senker: Schwefelsäure, Salzsäure, Natriumhydrogensulfat"
+    },
+    {
+      nr: 33,
+      q: "Was entsteht bei der Reaktion HCl + NaOH?",
+      e: "NaCl + H2O. Salzsäure + Natronlauge ergibt Kochsalz + Wasser.",
+      o: [
+        "NaCl + H2O",
+        "Cl2 + H2O",
+        "O2 + H2",
+        "H2SO4 + NaCl"
+      ],
+      correctText: "NaCl + H2O"
+    },
+    {
+      nr: 34,
+      q: "Warum kann der pH-Wert schwanken?",
+      e: "Zum Beispiel durch Ausgasen von Kohlendioxid (CO2), Chlor, sauren Regen, hohe Temperatur und viele Badegäste.",
+      o: [
+        "Durch CO2-Ausgasung, Chlor, sauren Regen, hohe Temperatur, viele Badegäste",
+        "Nur durch die Beleuchtung",
+        "Nur durch die Umwälzpumpe",
+        "Nur durch die Rückspülung"
+      ],
+      correctText: "Durch CO2-Ausgasung, Chlor, sauren Regen, hohe Temperatur, viele Badegäste"
+    },
+    {
+      nr: 35,
+      q: "Wozu dient Marmorkies und welche Alternative wird genannt?",
+      e: "Marmorkies wird in offenen Filtern oder Druckfiltern eingesetzt, um saures Wasser zu neutralisieren. Als Alternative werden Soda und Natronlauge genannt.",
+      o: [
+        "Zur Neutralisation von saurem Wasser; Alternative: Soda oder Natronlauge",
+        "Zur Desinfektion; Alternative: Ozon",
+        "Zur Flockung; Alternative: Aluminiumsulfat",
+        "Zur Erwärmung; Alternative: Dampf"
+      ],
+      correctText: "Zur Neutralisation von saurem Wasser; Alternative: Soda oder Natronlauge"
+    },
+    {
+      nr: 38,
+      q: "Wie viel Flockungsmittel wird bei 180 m³/h und 0,3 g/m³ pro Stunde verbraucht?",
+      e: "54,0 g/h.",
+      o: [
+        "54,0 g/h",
+        "18,0 g/h",
+        "180,0 g/h",
+        "0,3 g/h"
+      ],
+      correctText: "54,0 g/h"
+    },
+    {
+      nr: 39,
+      q: "Welche drei Aufgaben erledigt der Sorptionsfilter bei Ozon-Verfahren?",
+      e: "Abbau von Restozon, Entfernung von Oxidationsnebenprodukten, Reduktion von gebundenem Chlor.",
+      o: [
+        "Abbau von Restozon, Entfernung von Oxidationsnebenprodukten, Reduktion von gebundenem Chlor",
+        "Erhöhung der Wasserhärte, pH-Wert-Anhebung, Erwärmung",
+        "Nur Chlorzugabe",
+        "Nur Flockungsmitteldosierung"
+      ],
+      correctText: "Abbau von Restozon, Entfernung von Oxidationsnebenprodukten, Reduktion von gebundenem Chlor"
+    },
+    {
+      nr: 41,
+      q: "Wofür steht die Angabe 'n' auf dem Typenschild einer Pumpe?",
+      e: "n steht für die Drehzahl.",
+      o: [
+        "Drehzahl",
+        "Spannung",
+        "Leistung",
+        "Volumenstrom"
+      ],
+      correctText: "Drehzahl"
     }
   ];
 
   const questions = shuffleArray(rawQuestions).map(q => {
     const shuffledOptions = shuffleArray(q.o);
-
     return {
       ...q,
       o: shuffledOptions,
@@ -345,9 +420,7 @@
       const b = document.createElement('button');
       b.className = 'answer-btn';
 
-      if (states[cur] === i) {
-        b.classList.add('selected');
-      }
+      if (states[cur] === i) b.classList.add('selected');
 
       if (revealed[cur]) {
         if (i === data.a) {
@@ -361,7 +434,6 @@
 
       b.onclick = () => {
         if (revealed[cur]) return;
-
         states[cur] = i;
         revealed[cur] = true;
 
@@ -471,5 +543,3 @@
 
   render();
 </script>
-</body>
-</html>
