@@ -5,35 +5,53 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>FAB Klausurtrainer</title>
   <style>
+    :root {
+      --fach1: #ef4444;
+      --fach2: #3b82f6;
+      --fach3: #6b7280;
+      --fach4: #10b981;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #1e293b;
+      --muted: #64748b;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
     body {
       margin: 0;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background: #f8fafc;
-      color: #1e293b;
+      background: var(--bg);
+      color: var(--text);
     }
 
     .container {
-      max-width: 800px;
+      max-width: 860px;
       margin: 0 auto;
-      padding: 24px;
+      padding: 24px 16px 40px;
     }
 
     .card {
-      background: white;
+      background: var(--card);
       border-radius: 24px;
-      padding: 24px;
+      padding: 28px;
       box-shadow: 0 10px 25px rgba(0,0,0,0.05);
       margin-top: 30px;
     }
 
     h1 {
-      margin-top: 0;
+      margin: 0 0 10px;
       font-size: 32px;
+      line-height: 1.2;
     }
 
-    p {
+    .subtitle {
       color: #475569;
       font-size: 16px;
+      margin-bottom: 24px;
     }
 
     .button-list {
@@ -45,23 +63,66 @@
     .btn {
       display: block;
       text-decoration: none;
-      text-align: center;
-      padding: 16px;
-      border-radius: 16px;
-      font-weight: bold;
+      padding: 18px 20px;
+      border-radius: 18px;
+      font-weight: 700;
       font-size: 16px;
       color: white;
+      transition: transform 0.12s ease, opacity 0.12s ease;
+      box-shadow: 0 8px 18px rgba(0,0,0,0.08);
     }
 
-    .btn-red { background: #ef4444; }
-    .btn-blue { background: #3b82f6; }
-    .btn-gray { background: #6b7280; }
-    .btn-green { background: #10b981; }
+    .btn:hover {
+      transform: translateY(-1px);
+      opacity: 0.96;
+    }
+
+    .btn-red { background: var(--fach1); }
+    .btn-blue { background: var(--fach2); }
+    .btn-gray { background: var(--fach3); }
+    .btn-green { background: var(--fach4); }
+
+    .btn-title {
+      display: block;
+      font-size: 17px;
+      margin-bottom: 4px;
+    }
+
+    .btn-sub {
+      display: block;
+      font-size: 13px;
+      opacity: 0.9;
+      font-weight: 500;
+    }
+
+    .info-box {
+      margin-top: 24px;
+      padding: 16px 18px;
+      border-radius: 16px;
+      background: #f1f5f9;
+      color: #475569;
+      font-size: 14px;
+      line-height: 1.5;
+    }
 
     .small {
       margin-top: 18px;
       font-size: 14px;
-      color: #64748b;
+      color: var(--muted);
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 28px;
+      }
+
+      .card {
+        padding: 22px;
+      }
+
+      .btn {
+        padding: 16px;
+      }
     }
   </style>
 </head>
@@ -69,16 +130,37 @@
   <div class="container">
     <div class="card">
       <h1>FAB Klausurtrainer</h1>
-      <p>Wähle ein Fach aus, um dein Quiz zu starten.</p>
+      <p class="subtitle">Wähle ein Fach aus und starte direkt mit deinem Quiz.</p>
 
       <div class="button-list">
-        <a class="btn btn-red" href="fach1.html">Fach 1 – Rettung & Medizin</a>
-        <a class="btn btn-blue" href="fach2.html">Fach 2 – Badebetrieb</a>
-        <a class="btn btn-gray" href="fach3.html">Fach 3 – folgt später</a>
-        <a class="btn btn-green" href="fach4.html">Fach 4 – folgt später</a>
+        <a class="btn btn-red" href="fach1.html">
+          <span class="btn-title">Fach 1 – Rettung & Medizin</span>
+          <span class="btn-sub">Prüfungsfragen zu Rettung, Erste Hilfe und Medizin</span>
+        </a>
+
+        <a class="btn btn-blue" href="fach2.html">
+          <span class="btn-title">Fach 2 – Badebetrieb</span>
+          <span class="btn-sub">Quiz zu Badebetrieb, Aufsicht und Praxis</span>
+        </a>
+
+        <a class="btn btn-gray" href="fach3.html">
+          <span class="btn-title">Fach 3 – Bädertechnik & Wasseraufbereitung</span>
+          <span class="btn-sub">Überarbeitete Fachfragen aus deiner Prüfungsvorbereitung</span>
+        </a>
+
+        <a class="btn btn-green" href="fach4.html">
+          <span class="btn-title">Fach 4 – Wirtschafts- & Sozialkunde</span>
+          <span class="btn-sub">Verträge, Recht, Sozialversicherung und Politik</span>
+        </a>
       </div>
 
-      <p class="small">Struktur: index.html, fach1.html, fach2.html, fach3.html, fach4.html</p>
+      <div class="info-box">
+        Aktuell sind Fach 3 und Fach 4 bereits mit überarbeiteten Inhalten ergänzt.
+        Falls eine Änderung nicht sofort sichtbar ist, lade die Seite einmal mit
+        <strong>Cmd + Shift + R</strong> neu.
+      </div>
+
+      <p class="small">Dateien: index.html, fach1.html, fach2.html, fach3.html, fach4.html</p>
     </div>
   </div>
 </body>
