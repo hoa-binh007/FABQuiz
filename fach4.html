@@ -294,148 +294,316 @@
 
   const rawQuestions = [
   {
+    
     nr: 1,
     q: "Wie kommt ein Vertrag zustande?",
-    e: "Ein Vertrag entsteht durch Angebot und Annahme, also durch zwei- oder mehrseitige übereinstimmende Willenserklärungen.",
+    e: "Ein Vertrag entsteht durch Angebot und Annahme, also durch zwei oder mehrseitige übereinstimmende Willenserklärungen[cite: 401, 402].",
     o: [
-      "Nur durch eine einseitige Willenserklärung",
-      "Durch Angebot und Annahme (zwei- oder mehrseitige Willenserklärungen)",
-      "Ausschließlich durch schriftliche Unterzeichnung beim Notar",
-      "Indem man eine Ware ohne Bezahlung mitnimmt"
+      "Durch Angebot und Annahme, durch zwei oder mehrseitige Willenserklärungen",
+      "Nur durch eine einseitige schriftliche Erklärung",
+      "Durch bloßes Schweigen auf eine Zeitungsanzeige",
+      "Durch die Bezahlung ohne vorherige Einigung"
     ],
-    correctText: "Durch Angebot und Annahme (zwei- oder mehrseitige Willenserklärungen)"
+    correctText: "Durch Angebot und Annahme, durch zwei oder mehrseitige Willenserklärungen"
   },
   {
     nr: 2,
-    q: "Welche Pflichten haben Käufer und Verkäufer bei einem Kaufvertrag?",
-    e: "Der Käufer muss zahlen und das Gut annehmen; der Verkäufer muss mangelfreies Gut übereignen.",
+    q: "Welche zwei Hauptpflichten haben Käufer und Verkäufer?",
+    e: "Der Käufer muss zahlen und das Gut annehmen. Der Verkäufer muss mangelfreies Gut übereignen[cite: 403, 404].",
     o: [
-      "Käufer: mangelfreie Ware liefern; Verkäufer: Ware annehmen",
-      "Käufer: zahlen und Gut annehmen; Verkäufer: mangelfreies Gut übereignen",
-      "Beide müssen nur die Rechnung unterschreiben",
-      "Der Verkäufer hat keine Pflichten nach der Bezahlung"
+      "Käufer: Prüfung der Ware; Verkäufer: Erstellung einer Quittung",
+      "Käufer: muss zahlen und das Gut annehmen; Verkäufer: mangelfreier Zustand und muss Gut übereignen",
+      "Käufer: Abholung der Ware; Verkäufer: Gewährung von Rabatten",
+      "Beide müssen den Vertrag lediglich beim Notar beglaubigen"
     ],
-    correctText: "Käufer: zahlen und Gut annehmen; Verkäufer: mangelfreies Gut übereignen"
+    correctText: "Käufer: muss zahlen und das Gut annehmen; Verkäufer: mangelfreier Zustand und muss Gut übereignen"
+  },
+  {
+    nr: 3,
+    q: "Welche Sachmängel können beim Kauf von Fliesen auftreten?",
+    e: "Typische Mängel sind Beschädigungen, Farbfehler, Qualitätsunterschiede oder Unvollständigkeit[cite: 405, 406].",
+    o: [
+      "Nur ein falscher Lieferzeitpunkt",
+      "Kaputt, Oberfläche beschädigt, Farbfehler, Qualitätsunterschiede, Minderung der Rutschfestigkeit, Paket unvollständig",
+      "Ein zu hoher Preis im Vergleich zum Baumarkt",
+      "Dass die Fliesen dem Partner nicht gefallen"
+    ],
+    correctText: "Kaputt, Oberfläche beschädigt, Farbfehler, Qualitätsunterschiede, Minderung der Rutschfestigkeit, Paket unvollständig"
+  },
+  {
+    nr: 4,
+    q: "Welche rechtlichen Grundlagen gelten für eine Reklamation (z. B. Fliesenkauf)?",
+    e: "Gemäß § 437 BGB besteht ein Gewährleistungsanspruch; der Verkäufer darf zwei Mal nachbessern [cite: 407-409].",
+    o: [
+      "Gewährleistungsanspruch, Verkäufer darf zwei Mal nachbessern, Anzeigefrist beachten (§ 437 BGB)",
+      "Sofortiges Recht auf Geld zurück ohne Nachbesserung",
+      "Es gibt kein Recht auf Reklamation bei Sonderangeboten",
+      "Die Frist für Reklamationen beträgt immer genau 10 Jahre"
+    ],
+    correctText: "Gewährleistungsanspruch, Verkäufer darf zwei Mal nachbessern, Anzeigefrist beachten (§ 437 BGB)"
   },
   {
     nr: 5,
-    q: "Welche Vertragsarten kommen im Schwimmbad vor?",
-    e: "Typisch sind Bade-, Miet-, Leih-, Dienst-, Werk-, Kauf- und ggf. Pachtverträge.",
+    q: "Nenne gängige Vertragsarten im Schwimmbad.",
+    e: "Typisch sind Bade-, Miet-, Leih-, Dienst-, Werk-, Kauf- und ggf. Pachtverträge[cite: 410, 411].",
     o: [
-      "Nur Arbeitsverträge und Versicherungsverträge",
       "Badevertrag, Mietvertrag, Leihvertrag, Dienstvertrag, Werkvertrag, Kaufvertrag, ggf. Pachtvertrag",
-      "Ausschließlich der Tarifvertrag des öffentlichen Dienstes",
-      "Kreditverträge und Bausparverträge"
+      "Ehevertrag, Schenkungsvertrag und Erbvertrag",
+      "Nur Arbeitsverträge und Versicherungsverträge",
+      "Kreditvertrag und Leasingvertrag"
     ],
     correctText: "Badevertrag, Mietvertrag, Leihvertrag, Dienstvertrag, Werkvertrag, Kaufvertrag, ggf. Pachtvertrag"
   },
   {
-    nr: 10,
-    q: "Wie wird die Geschäftsfähigkeit nach BGB differenziert?",
-    e: "Geschäftsunfähig (bis 7 Jahre), beschränkt geschäftsfähig (7–17 Jahre) und voll geschäftsfähig (ab 18 Jahre).",
+    nr: 6,
+    q: "Wann kann ein Auszubildender fristlos kündigen?",
+    e: "Innerhalb der Probezeit ist dies in Schriftform möglich; danach gilt die ordentliche Frist[cite: 412, 413].",
     o: [
-      "Alle Menschen sind ab der Geburt voll geschäftsfähig",
-      "Geschäftsunfähig (bis 7 J.), beschränkt geschäftsfähig (7-17 J.), voll geschäftsfähig (ab 18 J.)",
-      "Man ist erst mit Abschluss einer Ausbildung geschäftsfähig",
-      "Nur wer ein eigenes Einkommen hat, ist geschäftsfähig"
+      "Jederzeit ohne Angabe von Gründen",
+      "Ja, innerhalb der Probezeit in Schriftform fristlos, danach unter Einhaltung der ordentlichen Kündigungsfrist",
+      "Nur wenn der Arbeitgeber den Lohn nicht zahlt",
+      "Gar nicht, ein Ausbildungsvertrag ist unkündbar"
     ],
-    correctText: "Geschäftsunfähig (bis 7 J.), beschränkt geschäftsfähig (7-17 J.), voll geschäftsfähig (ab 18 J.)"
+    correctText: "Ja, innerhalb der Probezeit in Schriftform fristlos, danach unter Einhaltung der ordentlichen Kündigungsfrist"
+  },
+  {
+    nr: 7,
+    q: "Nenne 3 Pflichtinhalte eines Arbeitszeugnisses.",
+    e: "Inhalte sind Tätigkeitsbereiche, Zeitraum, wohlwollende Bewertung und Personalien[cite: 414, 415].",
+    o: [
+      "Lieblingshobbys des Mitarbeiters und Gehaltshöhe",
+      "Tätigkeitsbereiche, Beschäftigungszeitraum, wohlwollende Bewertung, Personalien beider Seiten",
+      "Nur die Anzahl der Krankheitstage",
+      "Ausschließlich die Note der Abschlussprüfung"
+    ],
+    correctText: "Tätigkeitsbereiche, Beschäftigungszeitraum, wohlwollende Bewertung, Personalien beider Seiten"
+  },
+  {
+    nr: 8,
+    q: "Welche Pflichten hat ein Auszubildender?",
+    e: "Dazu gehören Berufsschule, Berichtsheft, Aufgaben erfüllen und Einhaltung von Zeiten[cite: 416, 417].",
+    o: [
+      "Nur pünktliches Erscheinen zur Arbeit",
+      "Berufsschulteilnahme, Berichtsheft führen, übertragene Aufgaben ausüben, Prüfungsleistungen erbringen, Arbeits-/Ruhezeiten einhalten",
+      "Er hat keine Pflichten, da er noch lernt",
+      "Die Reinigung der privaten PKW der Geschäftsführung"
+    ],
+    correctText: "Berufsschulteilnahme, Berichtsheft führen, übertragene Aufgaben ausüben, Prüfungsleistungen erbringen, Arbeits-/Ruhezeiten einhalten"
+  },
+  {
+    nr: 9,
+    q: "Welche Energiesparmaßnahmen können im Bad umgesetzt werden?",
+    e: "Wassertemperatur, Saunaangebot, Attraktionen, Zeiten optimieren, alternative Energien und Bewegungsmelder[cite: 418, 419].",
+    o: [
+      "Erhöhung der Wassertemperatur zur Gästeanlockung",
+      "Wassertemperatur senken, Sauna/Attraktionen reduzieren/abschalten, Öffnungszeiten optimieren, alternative Energien, Bewegungsmelder",
+      "Die Beleuchtung in den Technikräumen nachts brennen lassen",
+      "Keine Maßnahmen, da das Bad immer gleich viel Energie braucht"
+    ],
+    correctText: "Wassertemperatur senken, Sauna/Attraktionen reduzieren/abschalten, Öffnungszeiten optimieren, alternative Energien, Bewegungsmelder"
+  },
+  {
+    nr: 10,
+    q: "Wie wird die Geschäftsfähigkeit nach BGB unterschieden?",
+    e: "Es gibt Geschäftsunfähigkeit (0-7 J.), beschränkte (7-17 J.) und volle Geschäftsfähigkeit (ab 18 J.) [cite: 420-422].",
+    o: [
+      "Alle sind ab der Geburt voll geschäftsfähig",
+      "Geschäftsunfähig (bis 7 J.), Beschränkt (7–17 J., Zustimmung nötig), Voll (ab 18 J.)",
+      "Man ist erst geschäftsfähig, wenn man Steuern zahlt",
+      "Kinder sind ab 14 Jahren voll geschäftsfähig"
+    ],
+    correctText: "Geschäftsunfähig (bis 7 J.), Beschränkt (7–17 J., Zustimmung nötig), Voll (ab 18 J.)"
   },
   {
     nr: 11,
-    q: "Was bedeutet 'Tarifautonomie'?",
-    e: "Tarifautonomie bedeutet, dass Gewerkschaften und Arbeitgeberverbände Tarifverträge ohne staatliche Einflussnahme selbstständig regeln.",
+    q: "Was bedeutet 'Unabdingbarkeit' im Tarifrecht?",
+    e: "Einzelarbeitsverträge dürfen nur bessere, niemals schlechtere Bedingungen als der Tarifvertrag haben[cite: 426, 427].",
     o: [
-      "Dass der Staat die Löhne für alle Betriebe festlegt",
-      "Selbstständige Regelung von Tarifverträgen durch Sozialpartner ohne staatliche Einflussnahme",
-      "Dass jeder Mitarbeiter seinen Lohn selbst mit dem Finanzamt aushandelt",
-      "Die Pflicht, Überstunden immer mit Freizeit auszugleichen"
+      "Dass ein Tarifvertrag niemals gekündigt werden kann",
+      "Der Einzelarbeitsvertrag darf nur bessere, niemals schlechtere Bedingungen als der geltende Tarifvertrag haben",
+      "Dass jeder Mitarbeiter in der Gewerkschaft sein muss",
+      "Die Pflicht, den Urlaub im Tarifvertrag festzulegen"
     ],
-    correctText: "Selbstständige Regelung von Tarifverträgen durch Sozialpartner ohne staatliche Einflussnahme"
+    correctText: "Der Einzelarbeitsvertrag darf nur bessere, niemals schlechtere Bedingungen als der geltende Tarifvertrag haben"
+  },
+  {
+    nr: 12,
+    q: "Wer ist der amtierende Ministerpräsident von Nordrhein-Westfalen?",
+    e: "Der Ministerpräsident von NRW ist Hendrik Wüst[cite: 432, 433].",
+    o: ["Olaf Scholz", "Hendrik Wüst", "Robert Habeck", "Friedrich Merz"],
+    correctText: "Hendrik Wüst"
+  },
+  {
+    nr: 13,
+    q: "Welche Aufgaben hat der Deutsche Bundestag?",
+    e: "Eine der Hauptaufgaben ist die Wahl des Bundeskanzlers[cite: 458, 459].",
+    o: [
+      "Wählt den Bundespräsidenten",
+      "Wählt den Bundeskanzler",
+      "Setzt die Benzinpreise fest",
+      "Entlässt die Richter am Amtsgericht"
+    ],
+    correctText: "Wählt den Bundeskanzler"
+  },
+  {
+    nr: 14,
+    q: "Welches Ministerium leitet Christian Lindner aktuell?",
+    e: "Christian Lindner ist der Bundesminister für Finanzen[cite: 466, 469].",
+    o: ["Wirtschaft und Klimaschutz", "Inneres und Heimat", "Gesundheit", "Finanzen"],
+    correctText: "Finanzen"
   },
   {
     nr: 15,
-    q: "Wie lautet Artikel 1 Absatz 1 des Grundgesetzes (GG)?",
-    e: "Die Würde des Menschen ist unantastbar. Sie zu achten und zu schützen ist Verpflichtung aller staatlichen Gewalt.",
+    q: "Wie lautet der erste Satz des Artikels 1 im Grundgesetz?",
+    e: "Die Würde des Menschen ist unantastbar. Sie zu achten und zu schützen ist Verpflichtung aller staatlicher Gewalt[cite: 473, 474].",
     o: [
-      "Eigentum verpflichtet",
-      "Die Würde des Menschen ist unantastbar. Sie zu achten und zu schützen ist Verpflichtung aller staatlichen Gewalt.",
       "Alle Menschen sind vor dem Gesetz gleich",
-      "Jeder hat das Recht auf freie Entfaltung seiner Persönlichkeit"
+      "Eigentum verpflichtet",
+      "Die Würde des Menschen ist unantastbar",
+      "Die Freiheit der Person ist unverletzlich"
     ],
-    correctText: "Die Würde des Menschen ist unantastbar. Sie zu achten und zu schützen ist Verpflichtung aller staatlichen Gewalt."
+    correctText: "Die Würde des Menschen ist unantastbar"
+  },
+  {
+    nr: 16,
+    q: "Wer ist bei einer Betriebsratswahl wahlberechtigt?",
+    e: "Wahlberechtigt sind alle aktiven und passiven Wahlberechtigten des Betriebs[cite: 475, 476].",
+    o: [
+      "Nur die Geschäftsführung",
+      "Alle aktiven und passiven Wahlberechtigten",
+      "Nur Mitarbeiter, die länger als 10 Jahre im Betrieb sind",
+      "Ausschließlich Gewerkschaftsmitglieder"
+    ],
+    correctText: "Alle aktiven und passiven Wahlberechtigten"
   },
   {
     nr: 17,
     q: "Welche Abzüge werden vom Bruttolohn einbehalten?",
-    e: "Einbehalten werden Lohnsteuer, Kirchensteuer, Rentenversicherung, Arbeitslosenversicherung, Krankenversicherung und Pflegeversicherung.",
+    e: "Einbehalten werden Lohnsteuer, Kirchensteuer sowie die Sozialversicherungen[cite: 477, 478].",
     o: [
-      "Nur die Mehrwertsteuer und die Kfz-Steuer",
+      "Nur die Mehrwertsteuer",
       "Lohnsteuer, Kirchensteuer, RV, AV, KV und Pflegeversicherung",
-      "Ausschließlich die Miete und Stromkosten",
-      "Nur die Haftpflichtversicherung des Arbeitgebers"
+      "Ausschließlich die Haftpflichtversicherung",
+      "Miete, Strom und Telefonkosten"
     ],
     correctText: "Lohnsteuer, Kirchensteuer, RV, AV, KV und Pflegeversicherung"
   },
   {
     nr: 18,
-    q: "Welche Aufgabe übernimmt die gesetzliche Unfallversicherung?",
-    e: "Sie übernimmt die Versorgung der Verunfallten sowie Unfallverhütung und Rehabilitation.",
+    q: "Was ist eine Aufgabe der gesetzlichen Pflegeversicherung?",
+    e: "Sie übernimmt Pflegekosten und bietet Einstufung sowie Beratung im Pflegefall[cite: 479, 484].",
     o: [
-      "Zahlung von Krankengeld bei Grippe",
-      "Versorgung der Verunfallten, Unfallverhütung und Rehabilitation",
-      "Finanzierung des Zahnersatzes",
-      "Beratung im Pflegefall"
+      "Zahlung von Arbeitslosengeld",
+      "Übernahme der Pflegekosten, Einstufung und Beratung im Pflegefall",
+      "Rehabilitation nach einem Arbeitsunfall",
+      "Auszahlung der Altersrente"
     ],
-    correctText: "Versorgung der Verunfallten, Unfallverhütung und Rehabilitation"
+    correctText: "Übernahme der Pflegekosten, Einstufung und Beratung im Pflegefall"
+  },
+  {
+    nr: 19,
+    q: "Was ist die Hauptaufgabe von Gewerkschaften?",
+    e: "Vertretung der Arbeitnehmer, Verhandlungen mit Arbeitgebern und rechtliche Unterstützung [cite: 485-487].",
+    o: [
+      "Vereinigung der Arbeitgeber zur Beratung",
+      "Vertreter der Arbeitnehmer, führen Verhandlungen mit Arbeitgebern und leisten rechtliche Unterstützung",
+      "Erstellung von Gesetzen im Bundestag",
+      "Die alleinige Verwaltung der Rentenkassen"
+    ],
+    correctText: "Vertreter der Arbeitnehmer, führen Verhandlungen mit Arbeitgebern und leisten rechtliche Unterstützung"
+  },
+  {
+    nr: 20,
+    q: "Welcher Tarifvertrag gilt typischerweise für Beschäftigte im öffentlichen Dienst?",
+    e: "Der TVöD ist der zentrale Tarifvertrag für den öffentlichen Dienst[cite: 490, 491].",
+    o: ["BGB", "TVöD", "HGB", "StGB"],
+    correctText: "TVöD"
+  },
+  {
+    nr: 21,
+    q: "Welche Gesellschaftsform ist im Handelsregister eingetragen?",
+    e: "Dazu gehören u. a. GmbH, AG, OHG und KG[cite: 492, 493].",
+    o: [
+      "Privatperson",
+      "Eingetragener Kaufmann, OHG, KG, AG, GmbH, UG",
+      "Kegelclub",
+      "Wohngemeinschaft"
+    ],
+    correctText: "Eingetragener Kaufmann, OHG, KG, AG, GmbH, UG"
   },
   {
     nr: 22,
-    q: "Wann ist eine fristlose Kündigung zulässig?",
-    e: "Eine fristlose Kündigung ist bei Vorliegen eines wichtigen Grundes zulässig, zum Beispiel bei Diebstahl.",
+    q: "Wann ist eine fristlose Kündigung im Arbeitsverhältnis möglich?",
+    e: "Bei Vorliegen eines wichtigen Grundes, z. B. Diebstahl[cite: 494, 495].",
     o: [
-      "Wenn man einmal 5 Minuten zu spät kommt",
+      "Bei jeder kleinen Unpünktlichkeit",
       "Bei Vorlage eines wichtigen Grundes (z. B. Diebstahl)",
-      "Sobald man eine neue Stelle gefunden hat",
-      "Nur wenn der Betrieb wirtschaftliche Probleme hat"
+      "Wenn dem Chef die Krawatte nicht gefällt",
+      "Nur mit Zustimmung der Bundesagentur für Arbeit"
     ],
     correctText: "Bei Vorlage eines wichtigen Grundes (z. B. Diebstahl)"
   },
   {
-    nr: 24,
-    q: "Wann beginnt die Rechtsfähigkeit einer natürlichen Person?",
-    e: "Die Rechtsfähigkeit beginnt mit der Vollendung der Geburt und endet mit dem Tod.",
+    nr: 23,
+    q: "Welche Merkmale kennzeichnen ein qualifiziertes Arbeitszeugnis?",
+    e: "Es enthält Art, Dauer, Leistungsbeurteilung und Verhaltensbeurteilung[cite: 496, 497].",
     o: [
-      "Mit dem 7. Lebensjahr",
-      "Mit der Vollendung der Geburt",
-      "Erst mit der Volljährigkeit (18 Jahre)",
-      "Sobald man einen Personalausweis besitzt"
+      "Nur das Eintrittsdatum",
+      "Art & Dauer der Tätigkeit, Leistungsbeurteilung, Verhaltensbeurteilung",
+      "Ausschließlich die Fehlzeiten",
+      "Ein Foto des Mitarbeiters bei der Arbeit"
     ],
-    correctText: "Mit der Vollendung der Geburt"
+    correctText: "Art & Dauer der Tätigkeit, Leistungsbeurteilung, Verhaltensbeurteilung"
+  },
+  {
+    nr: 24,
+    q: "Wodurch zeichnet sich eine juristische Person aus?",
+    e: "Es ist eine Organisation mit eigener Rechtspersönlichkeit, die durch Organe handelt[cite: 498, 501, 502].",
+    o: [
+      "Es ist jeder lebende Mensch",
+      "Organisation, Vereinigung oder Sache, der vom Gesetz eine eigene Rechtspersönlichkeit verliehen wurde",
+      "Ein Tier mit eigenem Bankkonto",
+      "Nur der Bundespräsident persönlich"
+    ],
+    correctText: "Organisation, Vereinigung oder Sache, der vom Gesetz eine eigene Rechtspersönlichkeit verliehen wurde"
+  },
+  {
+    nr: 25,
+    q: "Wer ist der aktuelle Bundespräsident von Deutschland?",
+    e: "Das Amt des Bundespräsidenten wird aktuell von Frank-Walter Steinmeier bekleidet[cite: 503, 504].",
+    o: ["Hendrik Wüst", "Friedrich Merz", "Frank-Walter Steinmeier", "Nancy Faeser"],
+    correctText: "Frank-Walter Steinmeier"
+  },
+  {
+    nr: 26,
+    q: "Was ist die Landeshauptstadt von Bayern?",
+    e: "Die Hauptstadt von Bayern ist München[cite: 505, 510].",
+    o: ["Nürnberg", "Stuttgart", "Düsseldorf", "München"],
+    correctText: "München"
   },
   {
     nr: 27,
-    q: "Welche 5 Grundsätze gelten für die demokratische Wahl?",
-    e: "Die Wahl muss allgemein, unmittelbar, frei, gleich und geheim sein.",
+    q: "Welche 5 Grundsätze gelten für eine demokratische Wahl?",
+    e: "Wahlen müssen allgemein, unmittelbar, frei, gleich und geheim sein[cite: 522, 523].",
     o: [
-      "Öffentlich, teuer, verpflichtend, jährlich, schriftlich",
+      "Teuer, Öffentlich, Jährlich, Schriftlich, Verpflichtend",
       "Allgemein, unmittelbar, frei, gleich, geheim",
-      "Nur für Parteimitglieder, digital, gewichtet, offen, freiwillig",
-      "Zentral, indirekt, gebunden, ungleich, geschützt"
+      "Digital, Offen, Abgestuft, Indirekt, Erblich",
+      "Freiwillig, Geschützt, Begrenzt, Unfrei, Ungleich"
     ],
     correctText: "Allgemein, unmittelbar, frei, gleich, geheim"
   },
   {
     nr: 28,
-    q: "Welche Personengruppen genießen besonderen Kündigungsschutz?",
-    e: "Besonderen Kündigungsschutz genießen Schwangere bzw. Mütter, Auszubildende, Schwerbehinderte und Mitglieder von Betriebsverfassungsorganen.",
+    q: "Welche Personengruppe genießt besonderen Kündigungsschutz?",
+    e: "Besonderer Schutz gilt für Schwangere, Azubis, Schwerbehinderte und Betriebsräte[cite: 524, 525].",
     o: [
       "Alle Mitarbeiter in der Probezeit",
-      "Schwangere, Auszubildende, Schwerbehinderte, Mitglieder von Betriebsverfassungsorganen",
-      "Nur Mitarbeiter mit einem befristeten Vertrag",
+      "Schwangere/Mütter, Auszubildende, Schwerbehinderte, Mitglieder von Betriebsverfassungsorganen",
+      "Nur männliche Arbeitnehmer über 50",
       "Ausschließlich die Geschäftsführung"
     ],
-    correctText: "Schwangere, Auszubildende, Schwerbehinderte, Mitglieder von Betriebsverfassungsorganen"
+    correctText: "Schwangere/Mütter, Auszubildende, Schwerbehinderte, Mitglieder von Betriebsverfassungsorganen"
   }
 ];
 
