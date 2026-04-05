@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FAB Klausurtrainer - Fach 1</title>
+  <style>
+    :root {
+      /* Farbkodierung der 4 Fächer */
+      --color-fach1: #ef4444; /* Rot: Rettung/Medizin */
+      --color-fach2: #3b82f6; /* Blau: Technik */
+      --color-fach3: #6b7280; /* Grau: Recht */
+      --color-fach4: #10b981; /* Grün: Wirtschaft */
+      
+      --primary: var(--color-fach1); /* Aktuelles Fach */
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #1e293b;
+    }
+
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    .container { max-width: 800px; margin: 0 auto; padding: 15px; }
+
+    .top-link {
+      display: inline-block;
+      margin: 10px 0 20px;
+      text-decoration: none;
+      color: var(--primary);
+      font-weight: bold;
+    }
+
+    /* Header & Badge */
+    .header { text-align: center; margin-bottom: 20px; }
+    .badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      background: var(--primary);
+      color: white;
+      font-size: 12px;
+      font-weight: bold;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+      margin-bottom: 20px;
+    }
+
+    .progress-bar {
+      height: 6px;
+      background: #e2e8f0;
+      border-radius: 3px;
+      margin: 15px 0;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: var(--primary);
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    .question-text {
+      font-size: 22px;
+      font-weight: 800;
+      margin-bottom: 20px;
+      color: #0f172a;
+    }
+
+    /* Antwort-Buttons */
+    .answers { display: grid; gap: 12px; }
+    .answer-btn {
+      width: 100%;
+      text-align: left;
+      border: 2px solid #f1f5f9;
+      background: #f1f5f9;
+      border-radius: 16px;
+      padding: 18px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+    .answer-btn:hover { border-color: #cbd5e1; }
+    .answer-btn.selected { border-color: var(--primary); background: white; }
+    .answer-btn.correct { background: #dcfce7; border-color: #22c55e; color: #166534; }
+    .answer-btn.wrong { background: #fee2e2; border-color: #ef4444; color: #991b1b; }
+
+    /* Feedback & Controls */
+    .feedback {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 16px;
+      background: #f8fafc;
+      font-size: 14px;
+      border-left: 4px solid var(--primary);
+    }
+
+    .controls {
+      display: flex;
+      gap: 10px;
+      margin-top: 30px;
+    }
+    .btn {
+      flex: 1;
+      padding: 16px;
+      border-radius: 16px;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 16px;
+      transition: transform 0.1s;
+    }
+    .btn:active { transform: scale(0.98); }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-secondary { background: #e2e8f0; color: #475569; }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* Grid Übersicht */
+    .grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      margin-top: 20px;
+    }
+    .grid-dot {
+      width: 35px;
+      height: 35px;
+      border-radius: 10px;
+      border: 1px solid #e2e8f0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: bold;
+      background: white;
+      cursor: pointer;
+    }
+    .grid-dot.active { border: 2px solid var(--primary); color: var(--primary); }
+    .grid-dot.done { background: #e2e8f0; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <a class="top-link" href="index.html">← Zurück zur Startseite</a>
+  <div class="header">
+    <span class="badge">Fach 1: Rettung & Medizin</span>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    <div style="font-size: 14px; color: #64748b;">Frage <span id="qn">1</span> von <span id="total">10</span></div>
+  </div>
+
+  <div class="card">
+    <div class="question-text" id="qText">Lade Fragen...</div>
+    <div class="answers" id="ansBox"></div>
+    <div id="fbBox" style="display:none"></div>
+
+    <div class="controls">
+  <button class="btn btn-secondary" id="btnPrev" onclick="changeQ(-1)">Zurück</button>
+  <button class="btn btn-secondary" id="btnNext" onclick="changeQ(1)">Weiter</button>
+    </div>
+  </div>
+
+  <div class="grid" id="qGrid"></div>
+  <div class="card">
+  <h3>Deine Übersicht</h3>
+  <p><strong>Modus:</strong> <span id="modeLabel">Alle Fragen</span></p>
+  <p><strong>Beantwortet:</strong> <span id="statsAnswered">0</span> / <span id="statsTotal">0</span></p>
+  <p><strong>Richtig:</strong> <span id="statsCorrect">0</span></p>
+  <p><strong>Falsch:</strong> <span id="statsWrong">0</span></p>
+
+  <div class="controls" style="margin-top:16px;">
+    <button class="btn btn-primary" onclick="startWrongRepeat()">Falsche Fragen wiederholen</button>
+    <button class="btn btn-secondary" onclick="showAllQuestions()">Alle Fragen</button>
+  </div>
+</div>
+</div>
+
+<script>
+
+  const questions = [
+  {
+    nr: 1,
+    q: "Wie verläuft der Blutkreislauf richtig, beginnend im rechten Vorhof?",
+    o: [
+      "Rechter Vorhof → rechte Segelklappe → rechte Herzkammer → rechte Taschenklappe → Lungenarterien → Lunge → Lungenvenen → linker Vorhof → linke Segelklappe → linke Herzkammer → linke Taschenklappe → Aorta",
+      "Rechter Vorhof → Aorta → Lungenarterien → linker Vorhof → linke Herzkammer",
+      "Rechter Vorhof → rechte Herzkammer → linker Vorhof → Aorta → Hohlvene",
+      "Rechter Vorhof → Lungenvene → linke Segelklappe → linker Vorhof → Aorta"
+    ],
+    a: 0,
+    e: "Das ist die richtige Flussrichtung des Blutes durch rechtes Herz, Lunge, linkes Herz und Körperkreislauf."
+  },
+  {
+    nr: 2,
+    q: "Welche Hauptfunktion hat das Herz-Reiz-Leitungssystem?",
+    o: [
+      "Es reinigt das Blut im Herzen.",
+      "Es steuert und koordiniert das rhythmische Zusammenziehen und Erschlaffen des Herzmuskels.",
+      "Es erzeugt rote Blutkörperchen.",
+      "Es versorgt nur die linke Herzhälfte mit Sauerstoff."
+    ],
+    a: 1,
+    e: "Das Reiz-Leitungssystem sorgt dafür, dass das Herz rhythmisch und geordnet arbeitet."
+  },
+  {
+    nr: 3,
+    q: "Welche Reihenfolge gehört zum Herz-Reiz-Leitungssystem?",
+    o: [
+      "Sinusknoten → AV-Knoten → His-Bündel → Tawara-Schenkel → Purkinje-Fasern",
+      "AV-Knoten → Sinusknoten → Aorta → Purkinje-Fasern",
+      "Sinusknoten → rechte Kammer → linke Kammer → His-Bündel",
+      "Purkinje-Fasern → Sinusknoten → AV-Knoten → Lungenvene"
+    ],
+    a: 0,
+    e: "So läuft die elektrische Erregung regelhaft durch das Herz."
+  },
+  {
+    nr: 4,
+    q: "Was versteht man unter trockenem Ertrinken?",
+    o: [
+      "Eine Person stirbt im Wasser durch Herzinfarkt.",
+      "Wasser gelangt in den Magen und führt zu Übelkeit.",
+      "Ein Stimmritzenkrampf verhindert den Gasaustausch in der Lunge.",
+      "Eine Person überlebt den Vorfall länger als 24 Stunden."
+    ],
+    a: 2,
+    e: "Beim trockenen Ertrinken führt ein Stimmritzenkrampf dazu, dass keine ausreichende Atmung mehr möglich ist."
+  },
+  {
+    nr: 5,
+    q: "Was ist Asthma bronchiale?",
+    o: [
+      "Eine chronische Erkrankung der Atemwege mit anfallsweiser Verengung der Bronchien.",
+      "Eine bakterielle Erkrankung des Magens.",
+      "Eine Verletzung des Brustkorbs nach einem Sturz.",
+      "Eine akute Vergiftung durch Chlor."
+    ],
+    a: 0,
+    e: "Typisch sind anfallsweise verengte Bronchien, Husten und Atemnot."
+  },
+  {
+    nr: 6,
+    q: "Was ist ein Schlaganfall?",
+    o: [
+      "Eine allergische Reaktion der Haut.",
+      "Eine plötzlich auftretende Mangeldurchblutung oder Schädigung im Gehirn.",
+      "Eine Verletzung der Schulter durch Überlastung.",
+      "Eine harmlose Kreislaufschwäche ohne Folgen."
+    ],
+    a: 1,
+    e: "Im Dokument wird der Schlaganfall als plötzlich auftretende Mangeldurchblutung oder Gefäßschädigung beschrieben."
+  },
+  {
+    nr: 7,
+    q: "Was ist mit Pendelatmung beim Schnorcheln gemeint?",
+    o: [
+      "Ein normaler Atemrhythmus unter Wasser.",
+      "Die Ausatemluft verbleibt im Schnorchel und wird wieder eingeatmet.",
+      "Ein gezieltes Atemtraining für Streckentaucher.",
+      "Eine Entspannungstechnik vor dem Startsprung."
+    ],
+    a: 1,
+    e: "Dadurch kann es zu Sauerstoffmangel und Atemnot kommen."
+  },
+  {
+    nr: 8,
+    q: "Wie sollte ein Sonnenstich gelagert werden?",
+    o: [
+      "Schocklage mit Beinen hoch.",
+      "Flach auf den Bauch.",
+      "Schattig mit erhöhtem Kopf.",
+      "Nur im Stehen."
+    ],
+    a: 2,
+    e: "Bei Sonnenstich: schattig lagern und den Kopf erhöht."
+  },
+  {
+    nr: 9,
+    q: "Wie sollte ein Herzinfarkt gelagert werden?",
+    o: [
+      "Leicht erhöhter Oberkörper.",
+      "Schocklage mit Beinen hoch.",
+      "Bauchlage.",
+      "Komplett flach ohne Bewegung."
+    ],
+    a: 0,
+    e: "Im Dokument ist beim Herzinfarkt ein leicht erhöhter Oberkörper genannt."
+  },
+  {
+    nr: 10,
+    q: "Welche Lagerung passt laut Unterlage zu Hitzeerschöpfung?",
+    o: [
+      "Schattig und Schocklage mit leicht erhöhten Beinen.",
+      "Nur Kopf hochlagern.",
+      "Stabile Seitenlage grundsätzlich immer.",
+      "Bauchlage mit gesenktem Kopf."
+    ],
+    a: 0,
+    e: "So wird der Kreislauf unterstützt."
+  },
+  {
+    nr: 11,
+    q: "Welche Lagerung ist bei Volumenmangelschock richtig?",
+    o: [
+      "Oberkörper hoch.",
+      "Schocklage mit leicht erhöhten Beinen.",
+      "Sitzend nach vorne gebeugt.",
+      "Bauchlage."
+    ],
+    a: 1,
+    e: "Bei Volumenmangelschock ist die Schocklage genannt."
+  },
+  {
+    nr: 12,
+    q: "Welche Lagerung ist bei Hitzeschlag genannt?",
+    o: [
+      "Schattig, Kopf erhöht und kühlen.",
+      "Nur Beine hoch.",
+      "Flach in Rückenlage ohne Kühlung.",
+      "Bauchlage mit Druck auf den Rücken."
+    ],
+    a: 0,
+    e: "Im Dokument steht: schattig, Kopf erhöht und kühl."
+  },
+  {
+    nr: 13,
+    q: "Welches Stadium der Unterkühlung ist das erste?",
+    o: [
+      "Scheintod",
+      "Lähmung mit Bewusstlosigkeit",
+      "Abwehrstadium",
+      "Erschöpfungsstadium"
+    ],
+    a: 2,
+    e: "Die Unterlage nennt als erstes Stadium das Abwehrstadium."
+  },
+  {
+    nr: 14,
+    q: "Wofür steht die PECH-Regel?",
+    o: [
+      "Pause, Eis, Compression, Hochlagern",
+      "Puls, Eis, Cardio, Hilfe",
+      "Pause, Energie, Chirurgie, Heilung",
+      "Puls, Entlastung, Check, Hochheben"
+    ],
+    a: 0,
+    e: "Die PECH-Regel dient der Erstversorgung bei Muskel- und Gelenkverletzungen."
+  },
+  {
+    nr: 15,
+    q: "Was beschreibt der Begriff Methodik?",
+    o: [
+      "Welche Inhalte vermittelt werden.",
+      "Art und Weise des Vorgehens – also WIE man vorgeht.",
+      "Nur die Lernziele am Ende.",
+      "Die rechtlichen Grundlagen eines Kurses."
+    ],
+    a: 1,
+    e: "Methodik fragt nach dem WIE."
+  },
+  {
+    nr: 16,
+    q: "Was beschreibt der Begriff Didaktik?",
+    o: [
+      "Die Inhalte und Ziele – also WAS vermittelt werden soll.",
+      "Nur den Einsatz von Hilfsmitteln.",
+      "Ausschließlich die Bewegungsanalyse.",
+      "Nur die Reihenfolge einzelner Übungen."
+    ],
+    a: 0,
+    e: "Didaktik fragt nach Inhalten und Zielen, also nach dem WAS."
+  },
+  {
+    nr: 17,
+    q: "Was ist laut Unterlage ein deduktives Vermitteln der Erstschwimmart?",
+    o: [
+      "Nur freies Experimentieren ohne Anleitung.",
+      "Vormachen und Nachmachen auf kürzestem Weg zum Ziel.",
+      "Nur Theorieunterricht am Beckenrand.",
+      "Ausschließlich Partnerarbeit ohne Demonstration."
+    ],
+    a: 1,
+    e: "Die Unterlage beschreibt deduktiv als Vormachen und Nachmachen."
+  },
+  {
+    nr: 18,
+    q: "Welche Maßnahme gehört zu den Sicherheitsvorkehrungen im Schwimmkurs?",
+    o: [
+      "Gesundheitszustand abfragen",
+      "Teilnehmer unbeaufsichtigt springen lassen",
+      "Möglichst große Gruppen bilden",
+      "Tiefe des Beckens nicht beachten"
+    ],
+    a: 0,
+    e: "Im Dokument genannt: Gruppengröße beschränken, Gesundheitszustand abfragen, Anwesenheit beachten usw."
+  },
+  {
+    nr: 19,
+    q: "Welches Hilfsmittel gehört zum Schwimmkurs?",
+    o: [
+      "Poolnudel",
+      "Defibrillator",
+      "Sauerstoffflasche",
+      "Wärmedecke"
+    ],
+    a: 0,
+    e: "Poolnudel, Schwimmbrett, Schwimmgurt, Schwimmflügel und Stange werden genannt."
+  },
+  {
+    nr: 20,
+    q: "Welches methodische Prinzip gehört in den Schwimmkurs?",
+    o: [
+      "Vom Schweren zum Leichten",
+      "Vom Leichten zum Schweren",
+      "Vom Unbekannten zum Bekannten",
+      "Ohne Systematik arbeiten"
+    ],
+    a: 1,
+    e: "Das Prinzip 'vom Leichten zum Schweren' wird ausdrücklich genannt."
+  },
+  {
+    nr: 21,
+    q: "Welche Information gehört in eine Zeitungsanzeige für einen Schwimmkurs?",
+    o: [
+      "Zielgruppe des Angebots",
+      "Privatadresse aller Teilnehmer",
+      "Lieblingsfarbe des Kursleiters",
+      "Wetterbericht der letzten Woche"
+    ],
+    a: 0,
+    e: "Genannt werden u. a. Angebot, Zielgruppe, Ort, Zeit, Preis und Dauer."
+  },
+  {
+    nr: 22,
+    q: "Was ist Superkompensation?",
+    o: [
+      "Ein plötzlicher Leistungsabfall ohne Erholung.",
+      "Eine überschießende Anpassungsreaktion nach Belastung und ausreichender Regeneration.",
+      "Ein Verbot intensiven Trainings.",
+      "Ein ausschließlich psychologischer Effekt."
+    ],
+    a: 1,
+    e: "Nach Belastung und ausreichender Erholung steigt die Leistungsfähigkeit über das Ausgangsniveau."
+  },
+  {
+    nr: 23,
+    q: "Welches ist ein weiteres Trainingsprinzip neben der Superkompensation?",
+    o: [
+      "Prinzip der Individualität",
+      "Prinzip der Beliebigkeit",
+      "Prinzip der Bewegungsstarre",
+      "Prinzip der Zufallsbelastung"
+    ],
+    a: 0,
+    e: "Im Dokument genannt sind u. a. Individualität, progressive Leistungssteigerung und variierende Belastung."
+  },
+  {
+    nr: 24,
+    q: "Welche langfristige Veränderung kann regelmäßiges Training bewirken?",
+    o: [
+      "Weniger Ausdauer",
+      "Kleineres Herzschlagvolumen",
+      "Größeres Atemvolumen",
+      "Abbau der Muskulatur"
+    ],
+    a: 2,
+    e: "Genannt werden z. B. größeres Atemvolumen, mehr Ausdauer und Muskelaufbau."
+  },
+  {
+    nr: 25,
+    q: "Wo können Legionellen im Schwimmbad auftreten?",
+    o: [
+      "In Wasserleitungen und Duschen",
+      "Nur im Kassensystem",
+      "Nur im Chlorlager",
+      "Nur im Rettungsring"
+    ],
+    a: 0,
+    e: "Besonders Wasserleitungen, Duschen, Wasserhähne, Attraktionen und Totleitungen sind genannt."
+  },
+  {
+    nr: 26,
+    q: "Wie erfolgt der Infektionsweg bei Legionellen?",
+    o: [
+      "Nur über die Haut",
+      "Einatmung von Aerosolen",
+      "Nur über Lebensmittel",
+      "Nur über offene Wunden"
+    ],
+    a: 1,
+    e: "Im Dokument steht: Einatmung von Aerosolen, Aufnahme über Schleimhäute."
+  },
+  {
+    nr: 27,
+    q: "Welche Erkrankung kann durch Legionellen ausgelöst werden?",
+    o: [
+      "Pontiak-Fieber",
+      "Masern",
+      "Windpocken",
+      "Mumps"
+    ],
+    a: 0,
+    e: "Pontiak-Fieber und Lungenentzündung werden genannt."
+  },
+  {
+    nr: 28,
+    q: "Welcher Belastungsfaktor am Arbeitsplatz wird in der Unterlage genannt?",
+    o: [
+      "Feuchtigkeit",
+      "Wolkenbildung",
+      "Mondphasen",
+      "Jahreszeitenwechsel"
+    ],
+    a: 0,
+    e: "Genannt werden z. B. Wärme, Feuchtigkeit, Geräusche, Luftbeschaffenheit und Schichtarbeit."
+  },
+  {
+    nr: 29,
+    q: "Welche Maßnahme dient der Gesunderhaltung?",
+    o: [
+      "Gesunde Ernährung",
+      "Dauerhafter Schlafmangel",
+      "Verzicht auf Bewegung",
+      "Nur Nachtschichten ohne Ausgleich"
+    ],
+    a: 0,
+    e: "Im Dokument genannt: gesunde Ernährung, Sport, Schlaf und Ausgleich."
+  },
+  {
+    nr: 30,
+    q: "Wo werden Eiweiße gespalten?",
+    o: [
+      "Im Magen",
+      "Im Auge",
+      "Im Dickdarm",
+      "In der Luftröhre"
+    ],
+    a: 0,
+    e: "In der Unterlage ist der Magen genannt."
+  },
+  {
+    nr: 31,
+    q: "Wo werden Verdauungssäfte hinzugefügt?",
+    o: [
+      "Im Dünndarm",
+      "Im Kehlkopf",
+      "Im Herzbeutel",
+      "Im Dickdarm"
+    ],
+    a: 0,
+    e: "Laut Dokument werden Verdauungssäfte im Dünndarm hinzugefügt."
+  },
+  {
+    nr: 32,
+    q: "Wo werden Kohlenhydrate gespalten?",
+    o: [
+      "Im Mund und im Dünndarm",
+      "Nur im Dickdarm",
+      "Nur im Magen",
+      "Nur in der Speiseröhre"
+    ],
+    a: 0,
+    e: "Im Dokument genannt: Mund und Dünndarm."
+  },
+  {
+    nr: 33,
+    q: "Wo wird dem Nahrungsbrei Wasser entzogen?",
+    o: [
+      "Im Dickdarm",
+      "Im Magen",
+      "In der Leber",
+      "In der Lunge"
+    ],
+    a: 0,
+    e: "Im Dokument steht: Wasserentzug im Dickdarm."
+  },
+  {
+    nr: 34,
+    q: "Was ist bei einem epileptischen Krampfanfall wichtig?",
+    o: [
+      "Die Person im Krampf festhalten.",
+      "Gegenstände aus dem Umfeld entfernen und schützen.",
+      "Sofort Wasser einflößen.",
+      "Die Person im Krampf aufrichten."
+    ],
+    a: 1,
+    e: "Im Dokument: im Krampf vor Gegenständen schützen, nicht anfassen; bei Bewusstlosigkeit stabile Seitenlage."
+  },
+  {
+    nr: 35,
+    q: "Welche Aufgabe hat der Schiedsrichter beim Wettschwimmen?",
+    o: [
+      "Er ist der oberste Verantwortliche des Kampfgerichts.",
+      "Er misst nur die Zeit einer Bahn.",
+      "Er kontrolliert nur die Umkleiden.",
+      "Er startet ausschließlich die Musik."
+    ],
+    a: 0,
+    e: "Der Schiedsrichter wird als oberster Chef des Kampfgerichts genannt."
+  },
+  {
+    nr: 36,
+    q: "Was bedeutet das akustische Signal beim Wettkampfstart?",
+    o: [
+      "Start",
+      "Wende",
+      "Abbruch des Wettkampfs",
+      "Ende der Einschwimmzeit"
+    ],
+    a: 0,
+    e: "Kurze Pfiffe, lange Pfiffe, 'Auf die Plätze' und dann das akustische Startsignal."
+  },
+  {
+    nr: 37,
+    q: "Welche Anforderung gehört zum Babyschwimmen?",
+    o: [
+      "Das Kind sollte mindestens 3 Monate alt sein und den Kopf halten können.",
+      "Das Kind muss bereits 25 Meter schwimmen können.",
+      "Es darf keine Begleitperson mit ins Wasser.",
+      "Die Wassertemperatur spielt keine Rolle."
+    ],
+    a: 0,
+    e: "So steht es in der Unterlage, zusätzlich: Nabel verheilt, Begleitperson sicher im Wasser, Schwimmwindel."
+  },
+  {
+    nr: 38,
+    q: "Was versteht man unter Schwimmbad-Blackout im Zusammenhang mit Hyperventilation?",
+    o: [
+      "Bewusstlosigkeit beim Streckentauchen nach schnellem Ein- und Ausatmen.",
+      "Stromausfall in der Schwimmhalle.",
+      "Eine Panikreaktion vor dem Startsprung.",
+      "Eine allergische Reaktion auf Chlor."
+    ],
+    a: 0,
+    e: "Im Dokument wird das als schleichende Bewusstlosigkeit nach Hyperventilation beschrieben."
+  },
+  {
+    nr: 39,
+    q: "Welcher Sicherheitsaspekt gehört zum Tauchen?",
+    o: [
+      "Immer zu zweit tauchen",
+      "Immer allein trainieren",
+      "Mit Erkältung tief tauchen",
+      "Druckausgleich vermeiden"
+    ],
+    a: 0,
+    e: "Genannt werden u. a. zwei Personen, gesund ins Wasser, Tauchpausen und Druckausgleich."
+  },
+  {
+    nr: 40,
+    q: "Welches Beispiel ist ein Tauchspiel?",
+    o: [
+      "Unterwasser-Memory",
+      "Volleyball im Zuschauerraum",
+      "Lauftraining auf der Tribüne",
+      "Trockenübung am Whiteboard"
+    ],
+    a: 0,
+    e: "Tauchringe, Slalomtauchen, Unterwasser-Memory und Tunneltauchen werden genannt."
+  },
+  {
+    nr: 41,
+    q: "Wie viele Herzschläge pro Minute werden in der Unterlage als Normalwert genannt?",
+    o: [
+      "60–80",
+      "10–20",
+      "120–160",
+      "200–240"
+    ],
+    a: 0,
+    e: "Im Dokument ist 60–80 pro Minute genannt."
+  },
+  {
+    nr: 42,
+    q: "Welches Schlagvolumen pro Herzschlag ist genannt?",
+    o: [
+      "70–100 ml",
+      "5–10 ml",
+      "250–300 ml",
+      "1–2 Liter"
+    ],
+    a: 0,
+    e: "So ist es im Dokument aufgeführt."
+  },
+  {
+    nr: 43,
+    q: "Welches Herzminutenvolumen ist genannt?",
+    o: [
+      "5 Liter",
+      "0,5 Liter",
+      "15 Liter",
+      "50 Liter"
+    ],
+    a: 0,
+    e: "Im Dokument steht 5 Liter."
+  },
+  {
+    nr: 44,
+    q: "Wie viele Atemzüge pro Minute sind genannt?",
+    o: [
+      "12–16",
+      "2–4",
+      "30–40",
+      "60–80"
+    ],
+    a: 0,
+    e: "In der Unterlage sind 12–16 Atemzüge pro Minute genannt."
+  },
+  {
+    nr: 45,
+    q: "Welches Atemzugvolumen ist genannt?",
+    o: [
+      "400–700 ml",
+      "10–50 ml",
+      "2–3 Liter",
+      "5–6 Liter"
+    ],
+    a: 0,
+    e: "So steht es in der Unterlage."
+  },
+  {
+    nr: 46,
+    q: "Welches Atemminutenvolumen ist genannt?",
+    o: [
+      "6–8 Liter",
+      "1–2 Liter",
+      "15–20 Liter",
+      "40–50 Liter"
+    ],
+    a: 0,
+    e: "Im Dokument: 6–8 Liter pro Minute."
+  },
+  {
+    nr: 47,
+    q: "Was ist der Pleuraspalt?",
+    o: [
+      "Ein Muskel im Herzen",
+      "Ein schmaler Zwischenraum zwischen den beiden Blättern des Brustfells",
+      "Ein Hohlraum im Magen",
+      "Eine Kammer im Innenohr"
+    ],
+    a: 1,
+    e: "Der Pleuraspalt liegt zwischen den Pleurablättern; dort herrscht ein physiologischer Unterdruck."
+  },
+  {
+    nr: 48,
+    q: "Welche Funktion hat der Pleuraspalt?",
+    o: [
+      "Er ermöglicht reibungslose und schmerzfreie Atmung.",
+      "Er speichert Verdauungssäfte.",
+      "Er produziert rote Blutkörperchen.",
+      "Er reguliert die Körpertemperatur."
+    ],
+    a: 0,
+    e: "So wird es in der Unterlage beschrieben."
+  },
+  {
+    nr: 49,
+    q: "Was ist Atemregulation?",
+    o: [
+      "Die automatische Anpassung von Atemfrequenz und Atemtiefe an den Bedarf des Körpers.",
+      "Nur bewusstes tiefes Einatmen vor dem Tauchen.",
+      "Eine Trainingsmethode für Sprinter.",
+      "Die alleinige Steuerung der Stimme."
+    ],
+    a: 0,
+    e: "Genau so ist es im Dokument erklärt."
+  },
+  {
+    nr: 50,
+    q: "Welches Kernelement gehört zur Wassergewöhnung?",
+    o: [
+      "Ausatmung unter Wasser",
+      "Fehlstartleine ziehen",
+      "Wettkampfprotokoll schreiben",
+      "Siegerehrung vorbereiten"
+    ],
+    a: 0,
+    e: "Genannt werden Ausatmung unter Wasser, Tauchen, Auftrieb spüren, Gleiten und Springen."
+  },
+  {
+    nr: 51,
+    q: "Welcher Sicherheitsaspekt gehört zur Wassergewöhnung?",
+    o: [
+      "Kleine Gruppen und angepasste Wassertiefe",
+      "Möglichst keine Aufsicht",
+      "Kaltes Wasser zur Abhärtung",
+      "Keine Anweisungen geben"
+    ],
+    a: 0,
+    e: "Im Dokument: kleine Gruppen, gesunde Teilnehmer, Warmwasser, passende Tiefe und Aufsicht."
+  },
+  {
+    nr: 52,
+    q: "Welcher Sicherheitsaspekt gehört zu Großrutschen?",
+    o: [
+      "Ampelsteuerung oder Personalaufsicht",
+      "Gegenverkehr auf der Rutsche zulassen",
+      "Landebecken möglichst flach halten",
+      "Keine tägliche Prüfung notwendig"
+    ],
+    a: 0,
+    e: "Genannt werden u. a. Ampelsteuerung, vorgeschriebene Haltung, ausreichende Tiefe und tägliche Prüfung."
+  },
+  {
+    nr: 53,
+    q: "Welcher Sicherheitsaspekt gehört zum Turm- oder Wasserspringen?",
+    o: [
+      "Freies Becken und Aufsicht",
+      "Mehrere Gäste gleichzeitig auf dem Turm",
+      "Kein Handlauf nötig",
+      "Sprünge ins Nichtschwimmerbecken"
+    ],
+    a: 0,
+    e: "Im Dokument genannt: ein Gast auf dem Turm, Aufsicht, Handläufe, freies Tiefwasser."
+  },
+  {
+    nr: 54,
+    q: "Was ist ein methodischer Fehler in einem Trainingsplan?",
+    o: [
+      "Fehlende Progression",
+      "Individuelle Anpassung",
+      "Geplante Regeneration",
+      "Sinnvolle Belastungssteuerung"
+    ],
+    a: 0,
+    e: "Im Dokument: fehlende Progression, missachtete Belastungssteuerung, mangelnde Individualität usw."
+  },
+  {
+    nr: 55,
+    q: "Welche Aussage gehört zu den Wettkampfbestimmungen beim Rückenschwimmen?",
+    o: [
+      "Der Schwimmer startet im Wasser und muss grundsätzlich in Rückenlage schwimmen.",
+      "Der Start erfolgt immer vom Startblock in Bauchlage.",
+      "Die Rückenlage ist nur auf der ersten Bahn vorgeschrieben.",
+      "Im Ziel darf ausschließlich in Bauchlage angeschlagen werden."
+    ],
+    a: 0,
+    e: "So ist es in deiner Unterlage beschrieben."
+  },
+  {
+    nr: 56,
+    q: "Was versteht man unter Badetod?",
+    o: [
+      "Tod nach einem Vorfall im Wasser, der nicht durch Ertrinken verursacht wurde, z. B. Herzinfarkt oder Schlaganfall.",
+      "Tod durch Stimmritzenkrampf.",
+      "Tod nur nach Kontakt mit kaltem Wasser.",
+      "Tod ausschließlich im Nichtschwimmerbecken."
+    ],
+    a: 0,
+    e: "Genau so steht es bei dir im Dokument."
+  },
+  {
+    nr: 57,
+    q: "Was bedeutet Beinahe-Ertrinken laut Unterlage?",
+    o: [
+      "Ein Ertrinkungsvorfall, den die Person zunächst überlebt.",
+      "Ein trockener Husten nach dem Schwimmen.",
+      "Ein Sprung ins Wasser ohne Atemanhalten.",
+      "Ein Kreislaufkollaps an Land."
+    ],
+    a: 0,
+    e: "Im Dokument ist das als zunächst überlebter Ertrinkungsvorfall beschrieben."
+  },
+  {
+    nr: 58,
+    q: "Welche Angabe gehört in das Verbandbuch?",
+    o: [
+      "Datum und Uhrzeit",
+      "Lieblingsfarbe des Gastes",
+      "Urlaubsplanung des Personals",
+      "Wassertemperatur der letzten Woche"
+    ],
+    a: 0,
+    e: "Datum, Uhrzeit, Ort, Namen, Vorfall, Verletzung und Maßnahmen werden genannt."
+  },
+  {
+    nr: 59,
+    q: "Wofür dient die Neuner-Regel bei Verbrennungen?",
+    o: [
+      "Zur schnellen Schätzung der verbrannten Körperoberfläche in Prozent.",
+      "Zur Bestimmung des Pulses.",
+      "Zur Beurteilung der Wassertiefe.",
+      "Zur Berechnung des Chlorgehalts."
+    ],
+    a: 0,
+    e: "Die Neuner-Regel dient der schnellen prozentualen Einschätzung."
+  },
+  {
+    nr: 60,
+    q: "Welche Angabe gehört in eine Wettkampfausschreibung?",
+    o: [
+      "Ort und Datum",
+      "Nur die Musikliste",
+      "Nur die Farbe der Startblöcke",
+      "Privatnummer aller Kampfrichter"
+    ],
+    a: 0,
+    e: "Im Dokument genannt: Ort, Datum, Uhrzeit, Wettkampfstil, Kosten, Meldeschluss usw."
+  },
+  {
+    nr: 61,
+    q: "Welche Ausstattung gehört zu einem Wettkampfstandort?",
+    o: [
+      "Startblöcke mit Nummern und Zeitmessanlage",
+      "Nur ein Kassenautomat",
+      "Nur eine Lautsprecherbox",
+      "Nur Sitzbänke ohne Beckenmarkierung"
+    ],
+    a: 0,
+    e: "Startblöcke, Leinen, Zeitmessanlage, Signaleinrichtungen, Umkleiden usw. sind genannt."
+  },
+  {
+    nr: 62,
+    q: "Welche Vorbereitungsmaßnahme gehört vor oder am Wettkampftag dazu?",
+    o: [
+      "Materialcheck und Techniktest",
+      "Wettkampf ohne Personalplanung",
+      "Leinen erst nach dem Wettkampf ziehen",
+      "Wassertemperatur nicht prüfen"
+    ],
+    a: 0,
+    e: "Im Dokument werden Genehmigung, Ausschreibung, Personalplanung, Materialcheck und Techniktest genannt."
+  },
+  {
+    nr: 63,
+    q: "Welcher Fehler kann beim Brustschwimmen zur Disqualifikation führen?",
+    o: [
+      "Nicht-gleichzeitiger Anschlag bei Wende oder Ziel",
+      "Gleichzeitiger Armzug",
+      "Regelgerechte Beinbewegung",
+      "Korrekte Wende"
+    ],
+    a: 0,
+    e: "Mehrere Disqualifikationsgründe werden genannt; einer davon ist der nicht-gleichzeitige Anschlag."
+  },
+  {
+    nr: 64,
+    q: "Welches Hilfsmittel gehört zum Schwimmtraining?",
+    o: [
+      "Pullbuoy",
+      "Fieberthermometer",
+      "Lautsprecherpult",
+      "Startpistole"
+    ],
+    a: 0,
+    e: "In der Unterlage genannt: Pullbuoy, Poolnudel, Schwimmbrett, Paddles, Flossen usw."
+  },
+  {
+    nr: 65,
+    q: "Welche Aussage zur aeroben Zone ist laut Unterlage richtig?",
+    o: [
+      "Sie liegt etwa bei 60–80 % und wird mit der Dauermethode trainiert.",
+      "Sie liegt nur unter 20 % und ohne Trainingsmethode.",
+      "Sie liegt bei 95–100 % und nur mit Sprintmethode.",
+      "Sie hat nichts mit Ausdauer zu tun."
+    ],
+    a: 0,
+    e: "So ist es im Dokument beschrieben."
+  },
+  {
+    nr: 66,
+    q: "Welche Aussage zur anaeroben Zone ist laut Unterlage richtig?",
+    o: [
+      "Sie liegt etwa bei 80–95 % und wird mit der Intervallmethode trainiert.",
+      "Sie liegt bei 10–20 % und nur im Warm-up.",
+      "Sie entspricht immer der Regenerationszone.",
+      "Sie wird ausschließlich ohne Belastung trainiert."
+    ],
+    a: 0,
+    e: "So steht es bei dir in der Unterlage."
+  }
+];
+
+let cur = 0;
+let allQuestions = [...questions];
+let activeQuestions = [...questions];
+let states = Array(activeQuestions.length).fill(null);
+let revealed = Array(activeQuestions.length).fill(false);
+let isCorrectList = Array(activeQuestions.length).fill(null);
+let wrongQuestionIndices = [];
+let isRepeatMode = false;
+
+function render() {
+  const data = activeQuestions[cur];
+
+  document.getElementById('qText').innerText = data.q;
+  document.getElementById('qn').innerText = cur + 1;
+  document.getElementById('total').innerText = activeQuestions.length;
+  document.getElementById('progressFill').style.width =
+    ((cur + 1) / activeQuestions.length * 100) + "%";
+
+document.getElementById('modeLabel').innerText = isRepeatMode ? 'Wiederholungsmodus' : 'Alle Fragen';
+
+  const box = document.getElementById('ansBox');
+  box.innerHTML = "";
+
+  data.o.forEach((opt, i) => {
+    const b = document.createElement('button');
+    b.className = 'answer-btn';
+
+    if (states[cur] === i) {
+      b.classList.add('selected');
+    }
+
+    if (revealed[cur]) {
+      if (i === data.a) {
+        b.classList.add('correct');
+      } else if (states[cur] === i && i !== data.a) {
+        b.classList.add('wrong');
+      }
+    }
+
+    b.innerHTML = "<strong>" + String.fromCharCode(65 + i) + ".</strong> " + opt;
+
+    b.onclick = () => {
+      if (revealed[cur]) return;
+
+      states[cur] = i;
+      revealed[cur] = true;
+
+      const correct = i === data.a;
+      isCorrectList[cur] = correct;
+
+      if (!correct && !wrongQuestionIndices.includes(cur)) {
+        wrongQuestionIndices.push(cur);
+      }
+
+      render();
+    };
+
+    box.appendChild(b);
+  });
+
+  const fb = document.getElementById('fbBox');
+  fb.style.display = revealed[cur] ? 'block' : 'none';
+
+  if (revealed[cur]) {
+    const correct = isCorrectList[cur];
+    fb.innerHTML = `
+      <div class="feedback">
+        <strong style="color:${correct ? '#166534' : '#991b1b'};">
+          ${correct ? 'Richtig beantwortet.' : 'Falsch beantwortet.'}
+        </strong>
+        <br><br>
+        ${data.e}
+      </div>
+    `;
+  } else {
+    fb.innerHTML = "";
+  }
+
+  document.getElementById('btnPrev').disabled = cur === 0;
+  document.getElementById('btnNext').disabled = cur === activeQuestions.length - 1;
+
+  updateStats();
+  renderGrid();
+}
+
+function renderGrid() {
+  const g = document.getElementById('qGrid');
+  g.innerHTML = "";
+
+  activeQuestions.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'grid-dot';
+
+    if (i === cur) {
+      d.classList.add('active');
+    }
+
+    if (revealed[i]) {
+      d.classList.add('done');
+    }
+
+    d.innerText = i + 1;
+    d.onclick = () => {
+      cur = i;
+      render();
+    };
+
+    g.appendChild(d);
+  });
+}
+
+function updateStats() {
+  const answered = revealed.filter(x => x).length;
+  const correct = isCorrectList.filter(x => x === true).length;
+  const wrong = isCorrectList.filter(x => x === false).length;
+
+  document.getElementById('statsAnswered').innerText = answered;
+  document.getElementById('statsCorrect').innerText = correct;
+  document.getElementById('statsWrong').innerText = wrong;
+  document.getElementById('statsTotal').innerText = activeQuestions.length;
+}
+
+function changeQ(dir) {
+  cur = Math.max(0, Math.min(activeQuestions.length - 1, cur + dir));
+  render();
+}
+
+function startWrongRepeat() {
+  if (wrongQuestionIndices.length === 0) {
+    alert("Aktuell gibt es keine falsch beantworteten Fragen.");
+    return;
+  }
+
+  activeQuestions = wrongQuestionIndices.map(index => allQuestions[index]);
+  cur = 0;
+  states = Array(activeQuestions.length).fill(null);
+  revealed = Array(activeQuestions.length).fill(false);
+  isCorrectList = Array(activeQuestions.length).fill(null);
+  wrongQuestionIndices = [];
+  isRepeatMode = true;
+
+  render();
+}
+
+function showAllQuestions() {
+  activeQuestions = [...allQuestions];
+  cur = 0;
+  states = Array(activeQuestions.length).fill(null);
+  revealed = Array(activeQuestions.length).fill(false);
+  isCorrectList = Array(activeQuestions.length).fill(null);
+  wrongQuestionIndices = [];
+  isRepeatMode = false;
+
+  render();
+}
+
+render();
+
+  
+</script>
+</body>
+</html>

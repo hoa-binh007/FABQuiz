@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FAB Klausurtrainer</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: #f8fafc;
+      color: #1e293b;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+      margin-top: 30px;
+    }
+
+    h1 {
+      margin-top: 0;
+      font-size: 32px;
+    }
+
+    p {
+      color: #475569;
+      font-size: 16px;
+    }
+
+    .button-list {
+      display: grid;
+      gap: 14px;
+      margin-top: 24px;
+    }
+
+    .btn {
+      display: block;
+      text-decoration: none;
+      text-align: center;
+      padding: 16px;
+      border-radius: 16px;
+      font-weight: bold;
+      font-size: 16px;
+      color: white;
+    }
+
+    .btn-red { background: #ef4444; }
+    .btn-blue { background: #3b82f6; }
+    .btn-gray { background: #6b7280; }
+    .btn-green { background: #10b981; }
+
+    .small {
+      margin-top: 18px;
+      font-size: 14px;
+      color: #64748b;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <h1>FAB Klausurtrainer</h1>
+      <p>Wähle ein Fach aus, um dein Quiz zu starten.</p>
+
+      <div class="button-list">
+        <a class="btn btn-red" href="fach1.html">Fach 1 – Rettung & Medizin</a>
+        <a class="btn btn-blue" href="fach2.html">Fach 2 – Badebetrieb</a>
+        <a class="btn btn-gray" href="fach3.html">Fach 3 – folgt später</a>
+        <a class="btn btn-green" href="fach4.html">Fach 4 – folgt später</a>
+      </div>
+
+      <p class="small">Struktur: index.html, fach1.html, fach2.html, fach3.html, fach4.html</p>
+    </div>
+  </div>
+</body>
+</html>

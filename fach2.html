@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FAB Klausurtrainer - Fach 2</title>
+  <style>
+    :root {
+      --color-fach1: #ef4444;
+      --color-fach2: #3b82f6;
+      --color-fach3: #6b7280;
+      --color-fach4: #10b981;
+
+      --primary: var(--color-fach2);
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #1e293b;
+      --muted: #64748b;
+      --green-bg: #dcfce7;
+      --green-border: #22c55e;
+      --green-text: #166534;
+      --red-bg: #fee2e2;
+      --red-border: #ef4444;
+      --red-text: #991b1b;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 15px;
+    }
+
+    .top-link {
+      display: inline-block;
+      margin: 10px 0 20px;
+      text-decoration: none;
+      color: var(--primary);
+      font-weight: bold;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      background: var(--primary);
+      color: white;
+      font-size: 12px;
+      font-weight: bold;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+      margin-bottom: 20px;
+    }
+
+    .progress-bar {
+      height: 6px;
+      background: #e2e8f0;
+      border-radius: 3px;
+      margin: 15px 0;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--primary);
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    .question-meta {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .question-text {
+      font-size: 22px;
+      font-weight: 800;
+      margin-bottom: 20px;
+      color: #0f172a;
+    }
+
+    .answers {
+      display: grid;
+      gap: 12px;
+    }
+
+    .answer-btn {
+      width: 100%;
+      text-align: left;
+      border: 2px solid #f1f5f9;
+      background: #f1f5f9;
+      border-radius: 16px;
+      padding: 18px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .answer-btn:hover {
+      border-color: #cbd5e1;
+    }
+
+    .answer-btn.selected {
+      border-color: var(--primary);
+      background: white;
+    }
+
+    .answer-btn.correct {
+      background: var(--green-bg);
+      border-color: var(--green-border);
+      color: var(--green-text);
+    }
+
+    .answer-btn.wrong {
+      background: var(--red-bg);
+      border-color: var(--red-border);
+      color: var(--red-text);
+    }
+
+    .feedback {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 16px;
+      background: #f8fafc;
+      font-size: 14px;
+      border-left: 4px solid var(--primary);
+    }
+
+    .controls {
+      display: flex;
+      gap: 10px;
+      margin-top: 30px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      flex: 1;
+      min-width: 180px;
+      padding: 16px;
+      border-radius: 16px;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 16px;
+      transition: transform 0.1s;
+    }
+
+    .btn:active {
+      transform: scale(0.98);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-secondary {
+      background: #e2e8f0;
+      color: #475569;
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    .grid-dot {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      border: 1px solid #e2e8f0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: bold;
+      background: white;
+      cursor: pointer;
+      color: var(--text);
+    }
+
+    .grid-dot.active {
+      border: 2px solid var(--primary);
+      color: var(--primary);
+    }
+
+    .grid-dot.correct {
+      background: var(--green-bg);
+      border-color: var(--green-border);
+      color: var(--green-text);
+    }
+
+    .grid-dot.wrong {
+      background: var(--red-bg);
+      border-color: var(--red-border);
+      color: var(--red-text);
+    }
+
+    .note {
+      margin-top: 10px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <a class="top-link" href="index.html">← Zurück zur Startseite</a>
+
+  <div class="header">
+    <span class="badge">Fach 2: Badebetrieb</span>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    <div style="font-size: 14px; color: #64748b;">
+      Frage <span id="qn">1</span> von <span id="total">0</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="question-meta" id="questionMeta">Frage wird geladen ...</div>
+    <div class="question-text" id="qText">Lade Fragen...</div>
+    <div class="answers" id="ansBox"></div>
+    <div id="fbBox" style="display:none"></div>
+
+    <div class="controls">
+      <button class="btn btn-secondary" id="btnPrev" onclick="changeQ(-1)">Zurück</button>
+      <button class="btn btn-secondary" id="btnNext" onclick="changeQ(1)">Weiter</button>
+    </div>
+  </div>
+
+  <div class="grid" id="qGrid"></div>
+
+  <div class="card">
+    <h3>Deine Übersicht</h3>
+    <p><strong>Modus:</strong> <span id="modeLabel">Alle Fragen</span></p>
+    <p><strong>Beantwortet:</strong> <span id="statsAnswered">0</span> / <span id="statsTotal">0</span></p>
+    <p><strong>Richtig:</strong> <span id="statsCorrect">0</span></p>
+    <p><strong>Falsch:</strong> <span id="statsWrong">0</span></p>
+
+    <div class="controls" style="margin-top:16px;">
+      <button class="btn btn-primary" onclick="startWrongRepeat()">Falsche Fragen wiederholen</button>
+      <button class="btn btn-secondary" onclick="showAllQuestions()">Alle Fragen</button>
+    </div>
+
+    <div class="note">
+      Herausgefiltert: Nr. 9, 22, 25 und 27, weil diese in der Fach-2-Datei nicht sauber vollständig vorlagen.
+    </div>
+  </div>
+</div>
+
+<script>
+  function shuffleArray(array) {
+    const copy = [...array];
+    for (let i = copy.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [copy[i], copy[j]] = [copy[j], copy[i]];
+    }
+    return copy;
+  }
+
+  const rawQuestions = [
+    {
+      nr: 1,
+      q: "Welche Kriterien sind für die Standortwahl eines Schwimmbades wichtig?",
+      e: "Infrastruktur, Region, Verkehrsanbindung, Parkplatzsituation, Einzugsgebiet, Angebotswahl.",
+      o: [
+        "Infrastruktur, Region, Verkehrsanbindung, Parkplatzsituation, Einzugsgebiet, Angebotswahl",
+        "Nur Grundstücksgröße, Dachform und Wandfarbe",
+        "Nur Wassertiefe, Beckenumrandung und Pflanzen",
+        "Nur Personalkosten, Chlorverbrauch und Öffnungszeiten"
+      ],
+      correctText: "Infrastruktur, Region, Verkehrsanbindung, Parkplatzsituation, Einzugsgebiet, Angebotswahl"
+    },
+    {
+      nr: 2,
+      q: "Welche Anforderungen gelten laut Unterlage für die Wasseraufsicht?",
+      e: "Mindestens 18 Jahre alt, körperliche und geistige Eignung, Ausbildung in Erster Hilfe und HLW, ortskundig, Rettungsfähigkeit DLRG Silber oder vergleichbar, Nachweise nicht älter als 2 Jahre.",
+      o: [
+        "mind. 18 Jahre alt, körperliche und geistige Eignung, Ausbildung in Erster Hilfe und HLW, ortskundig, Rettungsfähigkeit DLRG Silber o.ä. Nachweise nicht älter als 2 Jahre",
+        "mind. 16 Jahre alt, Schwimmfähigkeit, Kassenkenntnisse und Sportabzeichen Bronze",
+        "nur gute körperliche Fitness und Ortskenntnis",
+        "nur Erste Hilfe und ein Arbeitsvertrag"
+      ],
+      correctText: "mind. 18 Jahre alt, körperliche und geistige Eignung, Ausbildung in Erster Hilfe und HLW, ortskundig, Rettungsfähigkeit DLRG Silber o.ä. Nachweise nicht älter als 2 Jahre"
+    },
+    {
+      nr: 3,
+      q: "Welche Maßnahmen gehören zur Verkehrssicherungspflicht?",
+      e: "Dazu gehören unter anderem HBO-Einhaltung, Sicherheit, Ordnung und Sauberkeit, Organisationspflicht, Badeaufsicht, Personalplanung, sichere Betriebsabläufe, Dokumentation, Rettungskette und geeignetes Personal.",
+      o: [
+        "Einhaltung der HBO, Sicherheit/Ordnung/Sauberkeit, Organisationspflicht, Badeaufsicht, Personalplanung, sichere Betriebsabläufe, Dokumentation, Zusammenarbeit mit dem Gesundheitsamt, Rettungskette, geeignetes Personal",
+        "Nur Kassenabrechnung, Dienstkleidung und Werbung",
+        "Nur Personalplanung, Wasserwerte und Eintrittspreise",
+        "Nur Reinigung, Marketing und Social Media"
+      ],
+      correctText: "Einhaltung der HBO, Sicherheit/Ordnung/Sauberkeit, Organisationspflicht, Badeaufsicht, Personalplanung, sichere Betriebsabläufe, Dokumentation, Zusammenarbeit mit dem Gesundheitsamt, Rettungskette, geeignetes Personal"
+    },
+    {
+      nr: 4,
+      q: "Welche Konsequenzen kann die Vernachlässigung der Verkehrssicherungspflicht haben?",
+      e: "Schadensersatzpflicht, vertragliche Haftung, Garantiehaftung sowie Folgen im Privat-, Straf- und Arbeitsrecht.",
+      o: [
+        "Schadensersatzpflicht nach §§ 823 ff. BGB, vertragliche Haftung nach § 280 BGB, Garantiehaftung ohne direktes eigenes Verschulden, Privat-/Straf-/Arbeitsrecht",
+        "Nur eine mündliche Ermahnung",
+        "Nur eine interne Umbesetzung",
+        "Keine rechtlichen Folgen"
+      ],
+      correctText: "Schadensersatzpflicht nach §§ 823 ff. BGB, vertragliche Haftung nach § 280 BGB, Garantiehaftung ohne direktes eigenes Verschulden, Privat-/Straf-/Arbeitsrecht"
+    },
+    {
+      nr: 5,
+      q: "Welche zusätzlichen Aufgaben darf man laut Unterlage neben der Wasseraufsicht durchführen?",
+      e: "Beleihung, Probenentnahme, aktives Kundengespräch.",
+      o: [
+        "Beleihung, Probenentnahme, aktives Kundengespräch",
+        "Rohrleitungsbau, Fliesenlegen, Elektroinstallation",
+        "Personalgespräche, Lohnabrechnung, Bauleitung",
+        "nur Kassenschluss und Schichttausch"
+      ],
+      correctText: "Beleihung, Probenentnahme, aktives Kundengespräch"
+    },
+    {
+      nr: 6,
+      q: "Wie wird die Verkehrssicherungspflicht erläutert?",
+      e: "Sie gilt für alle, die eine Gefahrenquelle schaffen oder unterhalten. Es müssen alle notwendigen und zumutbaren Vorkehrungen getroffen werden, um Schäden anderer zu verhindern.",
+      o: [
+        "Verkehrssicherungspflicht gilt für alle diejenigen, die eine Gefahrenquelle schaffen oder unterhalten. Es gilt die Pflicht, alle notwendigen und zumutbaren Vorkehrungen zu treffen, um Schäden anderer zu verhindern.",
+        "Sie gilt nur für die Geschäftsführung und nicht für den Betrieb",
+        "Sie bedeutet nur, dass man Warnschilder aufstellt",
+        "Sie betrifft nur technische Anlagen, nicht aber Badegäste"
+      ],
+      correctText: "Verkehrssicherungspflicht gilt für alle diejenigen, die eine Gefahrenquelle schaffen oder unterhalten. Es gilt die Pflicht, alle notwendigen und zumutbaren Vorkehrungen zu treffen, um Schäden anderer zu verhindern."
+    },
+    {
+      nr: 7,
+      q: "Welche Gründe sprechen für ein Computer-Kassensystem im Vergleich zum Personal?",
+      e: "Nicht manipulierbare und dokumentierte Tarife, besserer Schutz vor Vandalismus sowie systemgesteuerte Kassenabschlüsse mit möglicher Schnittstelle zur Buchhaltung.",
+      o: [
+        "Vorteile der nicht manipulierbarer und dokumentierter Tarife, besserer Schutz vor Vandalismus, systemgesteuerte Kassenabschlüsse mit ggf. Schnittstelle zur Buchhaltung",
+        "höherer Papierverbrauch, mehr Fehler, keine Auswertung",
+        "geringere Sicherheit und schlechtere Dokumentation",
+        "nur schöneres Aussehen der Kasse"
+      ],
+      correctText: "Vorteile der nicht manipulierbarer und dokumentierter Tarife, besserer Schutz vor Vandalismus, systemgesteuerte Kassenabschlüsse mit ggf. Schnittstelle zur Buchhaltung"
+    },
+    {
+      nr: 8,
+      q: "Was muss auf einer Kassenabrechnung stehen?",
+      e: "Buchungszeitraum, Datum, Kassenbestand vorher und nachher, bar und unbar getrennte Einnahmen, Tarife getrennt, Unterschrift des Mitarbeiters und 4-Augen-Prinzip.",
+      o: [
+        "Buchungszeitraum, Datum, Kassenbestand vorher und nachher, Einnahmen nach bar und nicht bar getrennt aufführen, Einnahmen nach Tarifen getrennt, Unterschrift des Mitarbeiters, 4 Augenprinzip.",
+        "nur Datum und Gesamtsumme",
+        "nur Name des Mitarbeiters und Uhrzeit",
+        "nur Bargeldbestand und Stempel"
+      ],
+      correctText: "Buchungszeitraum, Datum, Kassenbestand vorher und nachher, Einnahmen nach bar und nicht bar getrennt aufführen, Einnahmen nach Tarifen getrennt, Unterschrift des Mitarbeiters, 4 Augenprinzip."
+    },
+    {
+      nr: 10,
+      q: "Was bedeutet bei einem Schadenfall im Schwimmbad die Umkehr der Beweislast?",
+      e: "Der Betreiber muss nachweisen, dass der Schaden auch mit allen zumutbaren Vorkehrungen und dem Verhalten passiert wäre, etwa durch Dritte oder falsche Anwendung.",
+      o: [
+        "Der Betreiber muss nachweisen, dass der Schaden auch mit allen zumutbaren Vorkehrungen und dem Verhalten passiert wäre. Beispielsweise durch Dritte oder falsche Anwendung.",
+        "Der Badegast muss immer jede Einzelheit des Schadens allein beweisen",
+        "Niemand muss etwas beweisen",
+        "Es gilt nur dann, wenn die Badehose beschädigt wurde"
+      ],
+      correctText: "Der Betreiber muss nachweisen, dass der Schaden auch mit allen zumutbaren Vorkehrungen und dem Verhalten passiert wäre. Beispielsweise durch Dritte oder falsche Anwendung."
+    },
+    {
+      nr: 11,
+      q: "Welches Angebot passt zur Zielgruppe Familien mit Kindern?",
+      e: "Kindergeburtstage, Animation und Betreuungsangebote sprechen Familien mit Kindern an.",
+      o: [
+        "Kindergeburtstag, Animation, Betreuungsangebote",
+        "Nur Sauna & Spa",
+        "Nur Aqua-Cycling",
+        "Nur Frühschwimmen für Leistungssportler"
+      ],
+      correctText: "Kindergeburtstag, Animation, Betreuungsangebote"
+    },
+    {
+      nr: 12,
+      q: "Welche Werbemittel nennt die Unterlage?",
+      e: "Werbeanzeigen, Plakate, Flyer, Werbespots sowie Give-Aways wie Schwimmflügel oder Gummibärchen.",
+      o: [
+        "Werbeanzeige, Plakate, Flyer, Werbespots, Give-Aways wie Schwimmflügel, Gummibärchen",
+        "Nur Eintrittskarten und Dienstpläne",
+        "Nur Lautsprecherdurchsagen und Wasserwerte",
+        "Nur Kassenbons und Quittungen"
+      ],
+      correctText: "Werbeanzeige, Plakate, Flyer, Werbespots, Give-Aways wie Schwimmflügel, Gummibärchen"
+    },
+    {
+      nr: 13,
+      q: "Wie erklärt die Unterlage den Begriff Marketing?",
+      e: "Marketing ist ein Konzept der marktorientierten Unternehmensführung und umfasst Maßnahmen, um Entwicklungen im Konsumverhalten zu erkennen, zu bewerten und am Markt zu verbessern.",
+      o: [
+        "Marketing ist ein Konzept der marktorientierten Unternehmensführung und umfasst alle Maßnahmen, die die Entwicklung im Konsumverhalten zu erkennen, zu bewerten und am Markt zu verbessern.",
+        "Marketing ist nur das Verteilen von Flyern",
+        "Marketing ist nur Preiswerbung",
+        "Marketing ist nur Kundenbeschwerde-Management"
+      ],
+      correctText: "Marketing ist ein Konzept der marktorientierten Unternehmensführung und umfasst alle Maßnahmen, die die Entwicklung im Konsumverhalten zu erkennen, zu bewerten und am Markt zu verbessern."
+    },
+    {
+      nr: 14,
+      q: "Welche Führungsstile werden in der Unterlage beschrieben?",
+      e: "Autoritär, kooperativ und Laissez-faire.",
+      o: [
+        "Autoritär, kooperativ, Laissez-faire",
+        "Militärisch, demokratisch, sportlich",
+        "aktiv, passiv, neutral",
+        "operativ, technisch, juristisch"
+      ],
+      correctText: "Autoritär, kooperativ, Laissez-faire"
+    },
+    {
+      nr: 15,
+      q: "Wie viele Personen haben sich enthalten, wenn 850 Personen befragt wurden, 74 % zufrieden und 22 % eher unzufrieden waren?",
+      e: "100 % - 74 % - 22 % = 4 %. 4 % von 850 sind 34 Personen.",
+      o: [
+        "12 Personen",
+        "34 Personen",
+        "50 Personen",
+        "85 Personen"
+      ],
+      correctText: "34 Personen"
+    },
+    {
+      nr: 16,
+      q: "Was ist Eventmarketing?",
+      e: "Eventmarketing ist eine besondere Form des klassischen Marketings und beinhaltet systematische sowie zielgerichtete Planung, Durchführung und Nachbereitung von Veranstaltungen.",
+      o: [
+        "Eventmarketing ist eine besondere Form des klassischen Marketings und beinhaltet systematische und zielgerichtete Planung, Durchführung und Nachbereitung von Veranstaltungen.",
+        "Eventmarketing ist nur spontane Werbung ohne Planung",
+        "Eventmarketing ist nur Preisnachlass bei Regen",
+        "Eventmarketing bedeutet nur Online-Werbung"
+      ],
+      correctText: "Eventmarketing ist eine besondere Form des klassischen Marketings und beinhaltet systematische und zielgerichtete Planung, Durchführung und Nachbereitung von Veranstaltungen."
+    },
+    {
+      nr: 17,
+      q: "Was versteht man unter sozialer Preisgestaltung?",
+      e: "Soziale Preisgestaltung ermöglicht Teilhabe und Konsum für die breite Masse. Kein potenzieller Kunde soll aufgrund finanzieller Kriterien ausgeschlossen werden.",
+      o: [
+        "Soziale Preisgestaltung ermöglicht Teilhabe und den Konsum für die breite Masse. Kein potenzieller Kunde wird aufgrund finanzieller Kriterien ausgeschlossen.",
+        "Soziale Preisgestaltung bedeutet immer Höchstpreise",
+        "Soziale Preisgestaltung gilt nur für Vereine",
+        "Soziale Preisgestaltung bedeutet kostenlose Eintritte für alle"
+      ],
+      correctText: "Soziale Preisgestaltung ermöglicht Teilhabe und den Konsum für die breite Masse. Kein potenzieller Kunde wird aufgrund finanzieller Kriterien ausgeschlossen."
+    },
+    {
+      nr: 18,
+      q: "Wie sieht laut Unterlage ein Beispiel für Personalplanung aus?",
+      e: "Ein FaB oder Meister zur Sicherstellung der Betriebssicherheit, eine Person für Kassenbetrieb und Zutritt, eine Person für Reinigung und Service sowie eine Person für Übungsleitung und Anleitung der Eltern.",
+      o: [
+        "FaB/Meister zur Sicherstellung der Betriebssicherheit, 1 Person berechtigt für Kassenbetrieb und Zutritt, 1 Person für Reinigung und Service in den Umkleiden, 1 Person Übungsleitung und Anleitung der angemeldeten Eltern.",
+        "eine einzige Person für alles",
+        "nur zwei Personen: eine für Technik, eine für Werbung",
+        "nur externe Firmen ohne eigenes Personal"
+      ],
+      correctText: "FaB/Meister zur Sicherstellung der Betriebssicherheit, 1 Person berechtigt für Kassenbetrieb und Zutritt, 1 Person für Reinigung und Service in den Umkleiden, 1 Person Übungsleitung und Anleitung der angemeldeten Eltern."
+    },
+    {
+      nr: 19,
+      q: "Welche Merkmale nennt die Checkliste Unfallbericht?",
+      e: "Laufende Nummer, Unfallort und Datum, Personalien des Patienten, Unfallgeschehen, gegebenenfalls Zeugen, Unterschrift nach 4-Augen-Prinzip und weitere Maßnahmen.",
+      o: [
+        "Laufende Nummer, Unfallort und Datum, Personalien Patient, Unfallgeschehen, ggf. Zeugen, Unterschrift Personal nach 4 Augen-Prinzip, weitere Maßnahmen",
+        "nur Name und Uhrzeit",
+        "nur Unfallort und Unterschrift",
+        "nur Zeugen und Telefonnummer"
+      ],
+      correctText: "Laufende Nummer, Unfallort und Datum, Personalien Patient, Unfallgeschehen, ggf. Zeugen, Unterschrift Personal nach 4 Augen-Prinzip, weitere Maßnahmen"
+    },
+    {
+      nr: 20,
+      q: "Welche Merkmale nennt die Checkliste Betriebstagebuch?",
+      e: "Laufende Nummer, Datum, Dienstplan, Belegung, Wasserwerte, Filterspülung, Vorfälle oder Störungen, Reinigung, Chemikalienzugabe und Weiteres.",
+      o: [
+        "Laufende Nummer, Datum, Dienstplan, Belegung, Wasserwerte, Filterspülung, Vorfälle oder Störungen, sonstige Reinigung, Zugabe von Chemikalien, Weiteres",
+        "nur Besucherzahl und Wetter",
+        "nur Personalien des Personals",
+        "nur Technikdaten ohne Datum"
+      ],
+      correctText: "Laufende Nummer, Datum, Dienstplan, Belegung, Wasserwerte, Filterspülung, Vorfälle oder Störungen, sonstige Reinigung, Zugabe von Chemikalien, Weiteres"
+    },
+    {
+      nr: 21,
+      q: "Was muss eine Rechnung enthalten?",
+      e: "Kaufdatum, Tarif und Produkt netto, Gesamtbetrag, ausgewiesene Mehrwertsteuer, Bon- und Rechnungsnummer, Firma und Anschrift.",
+      o: [
+        "Kaufdatum, Tarif und Produkt netto, Gesamtbetrag, ausgewiesene Mehrwertsteuer, Bon- und Rechnungsnummer, Firma und Anschrift",
+        "nur Kaufdatum und Gesamtbetrag",
+        "nur Firma und Produktname",
+        "nur Tarif und Unterschrift"
+      ],
+      correctText: "Kaufdatum, Tarif und Produkt netto, Gesamtbetrag, ausgewiesene Mehrwertsteuer, Bon- und Rechnungsnummer, Firma und Anschrift"
+    },
+    {
+      nr: 23,
+      q: "Wofür steht AIDA?",
+      e: "Attention, Interest, Desire, Action.",
+      o: [
+        "Attention, Interest, Desire, Action",
+        "Action, Interest, Data, Attention",
+        "Attention, Intention, Design, Action",
+        "Awareness, Information, Desire, Activity"
+      ],
+      correctText: "Attention, Interest, Desire, Action"
+    },
+    {
+      nr: 24,
+      q: "Wie ist die Aussage zur Haus- und Badeordnung im Fall eines Badegasts zu verstehen?",
+      e: "Durch das Lösen der Eintrittskarte erkennt der Badegast die Haus- und Badeordnung an und geht ein vertragliches Verhältnis ein. Der Betreiber muss die Ordnung sichtbar oder online zur Verfügung stellen.",
+      o: [
+        "Durch das Lösen der Eintrittskarte erkennt der Badegast die HBO an und geht in ein vertragliches Verhältnis. Der Betreiber hat Maßnahmen im Vorfeld zu ergreifen und die HBO beispielsweise sichtbar vor dem Kassenbereich oder online zur Verfügung zu stellen.",
+        "Die HBO gilt nur, wenn der Badegast sie handschriftlich unterschreibt.",
+        "Die HBO gilt im Schwimmbad grundsätzlich nie automatisch.",
+        "Die HBO gilt nur für Stammgäste."
+      ],
+      correctText: "Durch das Lösen der Eintrittskarte erkennt der Badegast die HBO an und geht in ein vertragliches Verhältnis. Der Betreiber hat Maßnahmen im Vorfeld zu ergreifen und die HBO beispielsweise sichtbar vor dem Kassenbereich oder online zur Verfügung zu stellen."
+    },
+    {
+      nr: 26,
+      q: "Was muss bei einem Dienstplan berücksichtigt werden?",
+      e: "Beginn und Ende der Dienstzeit, Einhaltung der Pausen- und Ruhezeiten, Fehltage wie Urlaub und Krankheit, Personalplanung entsprechend des Bedarfs sowie fristgerechte Mitteilung und Veröffentlichung.",
+      o: [
+        "Beginn und Ende der Dienstzeit, Einhaltung der Pausen- und Ruhezeiten, Fehltage wie Urlaub und Krankheit, Personalplanung entsprechend der Bedarfe, fristgerechte Mitteilung und Veröffentlichung",
+        "nur die Wunschschichten des Personals",
+        "nur Beginn der Frühschicht",
+        "nur Urlaub und keine Ruhezeiten"
+      ],
+      correctText: "Beginn und Ende der Dienstzeit, Einhaltung der Pausen- und Ruhezeiten, Fehltage wie Urlaub und Krankheit, Personalplanung entsprechend der Bedarfe, fristgerechte Mitteilung und Veröffentlichung"
+    },
+    {
+      nr: 28,
+      q: "Wofür steht der Begriff PSA?",
+      e: "PSA steht für persönliche Schutzausrüstung.",
+      o: [
+        "persönliche Schutzausrüstung",
+        "personelle Sicherheitsaufsicht",
+        "praktische Schwimmausbildung",
+        "private Sicherheitsanlage"
+      ],
+      correctText: "persönliche Schutzausrüstung"
+    },
+    {
+      nr: 29,
+      q: "Wer muss die PSA bezahlen?",
+      e: "Der Arbeitgeber muss die PSA bezahlen.",
+      o: [
+        "der Arbeitgeber",
+        "der Arbeitnehmer",
+        "der Badegast",
+        "die Berufsgenossenschaft in jedem Fall"
+      ],
+      correctText: "der Arbeitgeber"
+    },
+    {
+      nr: 30,
+      q: "In welcher Richtlinie wird die PSA in der Unterlage vorgegeben?",
+      e: "EG.89686.",
+      o: [
+        "EG.89686",
+        "DIN 4711",
+        "BGB 280",
+        "HBO 12"
+      ],
+      correctText: "EG.89686"
+    },
+    {
+      nr: 31,
+      q: "Welche Folgen kann das Nichttragen der PSA haben?",
+      e: "Verletzungen, Berufskrankheiten oder Todesfolge, außerdem Abmahnung oder Kündigung. In der Unterlage steht zusätzlich, dass die Arbeitsversicherung nicht bezahlt wird.",
+      o: [
+        "kann zu Verletzung sein, Berufskrankheiten oder Todesfolge, Abmahnung/Kündigung. Arbeitsversicherung wird nicht bezahlt.",
+        "hat grundsätzlich keine Folgen",
+        "führt nur zu einer Ermahnung ohne Risiko",
+        "betrifft nur die Uniform und sonst nichts"
+      ],
+      correctText: "kann zu Verletzung sein, Berufskrankheiten oder Todesfolge, Abmahnung/Kündigung. Arbeitsversicherung wird nicht bezahlt."
+    },
+    {
+      nr: 32,
+      q: "Wie hoch ist laut Unterlage die Nennlast vom Becken bei 25 m x 17,5 m und 8 m Nichtschwimmerbereich?",
+      e: "84,26 Personen.",
+      o: [
+        "60 Personen",
+        "84,26 Personen",
+        "110 Personen",
+        "150 Personen"
+      ],
+      correctText: "84,26 Personen"
+    },
+    {
+      nr: 33,
+      q: "Wie hoch sind laut Unterlage die Gesamtkosten bei 2 Meistern, 3 Azubis, zusätzlich 1 Meister und 1 Azubi sowie 7,5 % Gehaltssteigerung?",
+      e: "14.986,25 €.",
+      o: [
+        "12.450,00 €",
+        "14.986,25 €",
+        "15.200,50 €",
+        "13.800,00 €"
+      ],
+      correctText: "14.986,25 €"
+    },
+    {
+      nr: 34,
+      q: "Welche Rechtsgüter nennt die Unterlage gemäß § 823 BGB?",
+      e: "Leben, Körper, Eigentum, Freiheit oder das sonstige Rechtsgut.",
+      o: [
+        "Leben / Körper / Eigentum / Freiheit oder des sonstigen Rechtsgut",
+        "nur Vermögen und Gewinn",
+        "nur Eigentum und Fahrzeug",
+        "nur Gesundheit und Kleidung"
+      ],
+      correctText: "Leben / Körper / Eigentum / Freiheit oder des sonstigen Rechtsgut"
+    },
+    {
+      nr: 35,
+      q: "Welche Rabatte oder Sonderaktionen nennt die Unterlage?",
+      e: "Treuerabatte, Zielgruppenrabatte, zeitgebundene Tarife wie off peak und early bird sowie Familienkarten.",
+      o: [
+        "Treuerabatte, Zielgruppenrabatte, zeitgebundene Tarife (off peak & early bird), Familienkarten",
+        "nur Weihnachtsrabatt",
+        "nur Vereinsrabatt und Technikbonus",
+        "nur Last-Minute-Tarife"
+      ],
+      correctText: "Treuerabatte, Zielgruppenrabatte, zeitgebundene Tarife (off peak & early bird), Familienkarten"
+    }
+  ];
+
+  const questions = shuffleArray(rawQuestions).map(q => {
+    const shuffledOptions = shuffleArray(q.o);
+
+    return {
+      ...q,
+      o: shuffledOptions,
+      a: shuffledOptions.indexOf(q.correctText)
+    };
+  });
+
+  let cur = 0;
+  let allQuestions = [...questions];
+  let activeQuestions = [...questions];
+  let states = Array(activeQuestions.length).fill(null);
+  let revealed = Array(activeQuestions.length).fill(false);
+  let isCorrectList = Array(activeQuestions.length).fill(null);
+  let wrongQuestionIndices = [];
+  let isRepeatMode = false;
+
+  function render() {
+    const data = activeQuestions[cur];
+
+    document.getElementById('questionMeta').innerText = `Nr. ${data.nr}`;
+    document.getElementById('qText').innerText = data.q;
+    document.getElementById('qn').innerText = cur + 1;
+    document.getElementById('total').innerText = activeQuestions.length;
+    document.getElementById('progressFill').style.width =
+      ((cur + 1) / activeQuestions.length * 100) + "%";
+    document.getElementById('modeLabel').innerText =
+      isRepeatMode ? "Wiederholungsmodus" : "Alle Fragen";
+
+    const box = document.getElementById('ansBox');
+    box.innerHTML = "";
+
+    data.o.forEach((opt, i) => {
+      const b = document.createElement('button');
+      b.className = 'answer-btn';
+
+      if (states[cur] === i) {
+        b.classList.add('selected');
+      }
+
+      if (revealed[cur]) {
+        if (i === data.a) {
+          b.classList.add('correct');
+        } else if (states[cur] === i && i !== data.a) {
+          b.classList.add('wrong');
+        }
+      }
+
+      b.innerHTML = "<strong>" + String.fromCharCode(65 + i) + ".</strong> " + opt;
+
+      b.onclick = () => {
+        if (revealed[cur]) return;
+
+        states[cur] = i;
+        revealed[cur] = true;
+
+        const correct = i === data.a;
+        isCorrectList[cur] = correct;
+
+        if (!correct && !wrongQuestionIndices.includes(cur)) {
+          wrongQuestionIndices.push(cur);
+        }
+
+        render();
+      };
+
+      box.appendChild(b);
+    });
+
+    const fb = document.getElementById('fbBox');
+    fb.style.display = revealed[cur] ? 'block' : 'none';
+
+    if (revealed[cur]) {
+      const correct = isCorrectList[cur];
+      fb.innerHTML = `
+        <div class="feedback">
+          <strong style="color:${correct ? '#166534' : '#991b1b'};">
+            ${correct ? 'Richtig beantwortet.' : 'Falsch beantwortet.'}
+          </strong>
+          <br><br>
+          ${data.e}
+        </div>
+      `;
+    } else {
+      fb.innerHTML = "";
+    }
+
+    document.getElementById('btnPrev').disabled = cur === 0;
+    document.getElementById('btnNext').disabled = cur === activeQuestions.length - 1;
+
+    updateStats();
+    renderGrid();
+  }
+
+  function renderGrid() {
+    const g = document.getElementById('qGrid');
+    g.innerHTML = "";
+
+    activeQuestions.forEach((_, i) => {
+      const d = document.createElement('div');
+      d.className = 'grid-dot';
+
+      if (isCorrectList[i] === true) d.classList.add('correct');
+      if (isCorrectList[i] === false) d.classList.add('wrong');
+      if (i === cur) d.classList.add('active');
+
+      d.innerText = i + 1;
+      d.onclick = () => {
+        cur = i;
+        render();
+      };
+
+      g.appendChild(d);
+    });
+  }
+
+  function updateStats() {
+    const answered = revealed.filter(Boolean).length;
+    const correct = isCorrectList.filter(x => x === true).length;
+    const wrong = isCorrectList.filter(x => x === false).length;
+
+    document.getElementById('statsAnswered').innerText = answered;
+    document.getElementById('statsCorrect').innerText = correct;
+    document.getElementById('statsWrong').innerText = wrong;
+    document.getElementById('statsTotal').innerText = activeQuestions.length;
+  }
+
+  function changeQ(dir) {
+    cur = Math.max(0, Math.min(activeQuestions.length - 1, cur + dir));
+    render();
+  }
+
+  function resetStateForActiveQuestions() {
+    states = Array(activeQuestions.length).fill(null);
+    revealed = Array(activeQuestions.length).fill(false);
+    isCorrectList = Array(activeQuestions.length).fill(null);
+    wrongQuestionIndices = [];
+  }
+
+  function startWrongRepeat() {
+    if (wrongQuestionIndices.length === 0) {
+      alert("Aktuell gibt es keine falsch beantworteten Fragen.");
+      return;
+    }
+
+    activeQuestions = wrongQuestionIndices.map(index => allQuestions[index]);
+    cur = 0;
+    resetStateForActiveQuestions();
+    isRepeatMode = true;
+    render();
+  }
+
+  function showAllQuestions() {
+    activeQuestions = [...allQuestions];
+    cur = 0;
+    resetStateForActiveQuestions();
+    isRepeatMode = false;
+    render();
+  }
+
+  render();
+</script>
+</body>
+</html>
