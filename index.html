@@ -10,6 +10,7 @@
       --fach2: #3b82f6;
       --fach3: #6b7280;
       --fach4: #10b981;
+      --fach4neu: #8b5cf6; /* Lila für die neue Version */
       --bg: #f8fafc;
       --card: #ffffff;
       --text: #1e293b;
@@ -81,6 +82,7 @@
     .btn-blue { background: var(--fach2); }
     .btn-gray { background: var(--fach3); }
     .btn-green { background: var(--fach4); }
+    .btn-purple { background: var(--fach4neu); } /* Neue Klasse für Lila */
 
     .btn-title {
       display: block;
@@ -112,17 +114,9 @@
     }
 
     @media (max-width: 600px) {
-      h1 {
-        font-size: 28px;
-      }
-
-      .card {
-        padding: 22px;
-      }
-
-      .btn {
-        padding: 16px;
-      }
+      h1 { font-size: 28px; }
+      .card { padding: 22px; }
+      .btn { padding: 16px; }
     }
   </style>
 </head>
@@ -130,7 +124,7 @@
   <div class="container">
     <div class="card">
       <h1>FAB Klausurtrainer</h1>
-      <p class="subtitle">Wähle ein Fach aus und starte direkt mit deinem Quiz.</p>
+      <p class="subtitle">Wähle ein Fach aus und starte dein Training.</p>
 
       <div class="button-list">
         <a class="btn btn-red" href="fach1.html">
@@ -145,22 +139,26 @@
 
         <a class="btn btn-gray" href="fach3.html">
           <span class="btn-title">Fach 3 – Bädertechnik & Wasseraufbereitung</span>
-          <span class="btn-sub">Überarbeitete Fachfragen aus deiner Prüfungsvorbereitung</span>
+          <span class="btn-sub">Überarbeitete Fachfragen zur Technik</span>
         </a>
 
         <a class="btn btn-green" href="fach4.html">
-          <span class="btn-title">Fach 4 – Wirtschafts- & Sozialkunde</span>
-          <span class="btn-sub">Verträge, Recht, Sozialversicherung und Politik</span>
+          <span class="btn-title">Fach 4 – WiSo (Alt)</span>
+          <span class="btn-sub">Bestehende Fragen zu Recht und Verträgen</span>
+        </a>
+
+        <!-- HIER DER NEUE TAB -->
+        <a class="btn btn-purple" href="fach4_neu.html">
+          <span class="btn-title">Fach 4 – WiSo (NEU)</span>
+          <span class="btn-sub">Optimierte Fragen & erweiterter Klausurinhalt</span>
         </a>
       </div>
 
       <div class="info-box">
-        Aktuell sind Fach 3 und Fach 4 bereits mit überarbeiteten Inhalten ergänzt.
-        Falls eine Änderung nicht sofort sichtbar ist, lade die Seite einmal mit
-        <strong>Cmd + Shift + R</strong> neu.
+        <strong>Update:</strong> Fach 4 wurde um eine neue Version (NEU) ergänzt. Die alte Version bleibt für den Übergang bestehen.
       </div>
 
-      <p class="small">Dateien: index.html, fach1.html, fach2.html, fach3.html, fach4.html</p>
+      <p class="small">Dateien: index.html, fach1.html, fach2.html, fach3.html, fach4.html, fach4_neu.html</p>
     </div>
   </div>
 </body>

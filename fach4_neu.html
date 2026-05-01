@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FAB Klausurtrainer - Fach 4 NEU</title>
+  <style>
+    :root {
+      --color-fach4neu: #8b5cf6;
+      --primary: var(--color-fach4neu);
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #1e293b;
+      --muted: #64748b;
+      --green-bg: #dcfce7;
+      --green-border: #22c55e;
+      --green-text: #166534;
+      --red-bg: #fee2e2;
+      --red-border: #ef4444;
+      --red-text: #991b1b;
+    }
+
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding-bottom: 40px;
+    }
+
+    .container { max-width: 860px; margin: 0 auto; padding: 15px; }
+
+    .top-link {
+      display: inline-block;
+      margin: 10px 0 20px;
+      text-decoration: none;
+      color: var(--primary);
+      font-weight: bold;
+    }
+
+    .header { text-align: center; margin-bottom: 20px; }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      background: var(--primary);
+      color: white;
+      font-size: 12px;
+      font-weight: bold;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .progress-bar {
+      height: 8px;
+      background: #e2e8f0;
+      border-radius: 4px;
+      margin: 15px 0;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--primary);
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+      margin-bottom: 20px;
+    }
+
+    .question-meta { font-size: 14px; color: var(--muted); margin-bottom: 8px; }
+    .question-text { font-size: 20px; font-weight: 800; margin-bottom: 20px; color: #0f172a; }
+
+    .answers { display: grid; gap: 12px; }
+
+    .answer-btn {
+      width: 100%;
+      text-align: left;
+      border: 2px solid #f1f5f9;
+      background: #f1f5f9;
+      border-radius: 16px;
+      padding: 16px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: all 0.2s;
+    }
+
+    .answer-btn:hover:not(:disabled) { border-color: #cbd5e1; }
+    .answer-btn.selected { border-color: var(--primary); background: white; }
+    .answer-btn.correct { background: var(--green-bg); border-color: var(--green-border); color: var(--green-text); }
+    .answer-btn.wrong { background: var(--red-bg); border-color: var(--red-border); color: var(--red-text); }
+
+    .feedback {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 16px;
+      background: #f8fafc;
+      border-left: 4px solid var(--primary);
+    }
+
+    .controls { display: flex; gap: 10px; margin-top: 30px; flex-wrap: wrap; }
+    .btn {
+      flex: 1;
+      min-width: 150px;
+      padding: 16px;
+      border-radius: 16px;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 15px;
+    }
+
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-secondary { background: #e2e8f0; color: #475569; }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .grid { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 20px; }
+    .grid-dot {
+      width: 35px; height: 35px; border-radius: 10px;
+      border: 1px solid #e2e8f0; display: flex;
+      align-items: center; justify-content: center;
+      font-size: 11px; font-weight: bold; background: white; cursor: pointer;
+    }
+    .grid-dot.active { border: 2px solid var(--primary); color: var(--primary); }
+    .grid-dot.correct { background: var(--green-bg); border-color: var(--green-border); color: var(--green-text); }
+    .grid-dot.wrong { background: var(--red-bg); border-color: var(--red-border); color: var(--red-text); }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <a class="top-link" href="index.html">← Zur Startseite</a>
+
+  <div class="header">
+    <span class="badge">Fach 4 NEU - Klausurtraining</span>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    <div style="font-size: 14px; color: #64748b;">
+      Fortschritt: <span id="qn">1</span> von <span id="total">0</span>
+    </div>
+  </div>
+
+  <div class="card" id="mainCard">
+    <div class="question-meta" id="questionMeta">Lädt...</div>
+    <div class="question-text" id="qText">Fragen werden geladen...</div>
+    <div class="answers" id="ansBox"></div>
+    <div id="fbBox" style="display:none"></div>
+
+    <div class="controls">
+      <button class="btn btn-secondary" id="btnPrev" onclick="changeQ(-1)">← Zurück</button>
+      <button class="btn btn-secondary" id="btnNext" onclick="changeQ(1)">Weiter →</button>
+    </div>
+  </div>
+
+  <div class="grid" id="qGrid"></div>
+
+  <div class="card">
+    <h3>Quiz-Steuerung</h3>
+    <p>Modus: <strong id="modeLabel">Feste Reihenfolge</strong></p>
+    <p>Richtig: <span id="statsCorrect" style="color:green">0</span> | Falsch: <span id="statsWrong" style="color:red">0</span></p>
+
+    <div class="controls">
+      <button class="btn btn-secondary" onclick="showAllQuestions()">📋 Alle Fragen (1-105)</button>
+      <button class="btn btn-primary" onclick="showRandomOrder()">🔀 Zufallsmodus</button>
+      <button class="btn btn-primary" style="background:#dc2626" onclick="startWrongRepeat()">🔁 Fehler wiederholen</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const rawQuestions = [
+    { nr: 1, q: "Welche Pflicht hat der Arbeitgeber im Rahmen des Arbeitsverhältnisses nicht?", e: "Richtig ist: Auf Wunsch des Arbeitnehmers unbezahlten Urlaub zu gewähren.", o: ["Sanitäre Einrichtungen einzurichten und zu unterhalten", "Die Vergütung pünktlich zu zahlen", "Auf Wunsch des Arbeitnehmers unbezahlten Urlaub zu gewähren", "Die Unfallverhütungsvorschriften zu beachten", "Bei Beendigung des Arbeitsverhältnisses ein Zeugnis auszustellen"], correctText: "Auf Wunsch des Arbeitnehmers unbezahlten Urlaub zu gewähren" },
+    { nr: 2, q: "Ein Arbeiter ist unverschuldet arbeitsunfähig erkrankt. Welche Verpflichtung hat er nicht?", e: "Richtig ist: Dem Arbeitgeber den Namen der Krankheit zu nennen.", o: ["Dem Arbeitgeber den Namen der Krankheit zu nennen", "Dem Arbeitgeber unverzüglich die Arbeitsunfähigkeit zu melden", "Den Arbeitgeber über die voraussichtliche Dauer der Arbeitsunfähigkeit zu informieren", "Spätestens nach Ablauf des dritten Tages dem Arbeitgeber eine ärztliche Bescheinigung einzureichen", "Die ärztlichen Weisungen zu beachten"], correctText: "Dem Arbeitgeber den Namen der Krankheit zu nennen" },
+    { nr: 3, q: "Welche Unterlagen müssen Sie in jedem Fall bei Antritt einer neuen Stelle als Facharbeiter dem Arbeitgeber vorlegen?", e: "Richtig ist: Lohnsteuerkarte und Versicherungsnachweis.", o: ["Schulzeugnis, Lohnsteuerkarte", "Personalausweis, Versicherungskarte", "Reisepass, Führungszeugnis", "Geburtsschein, Facharbeiterbrief", "Lohnsteuerkarte, Versicherungsnachweis"], correctText: "Lohnsteuerkarte, Versicherungsnachweis" },
+    { nr: 4, q: "Welche Voraussetzung muss ein Arbeitnehmer erfüllen, wenn er Rechte aus dem Kündigungsschutzgesetz geltend machen will?", e: "Richtig ist: Er muss dem Betrieb ohne Unterbrechung länger als sechs Monate angehören.", o: ["Er muss das 21. Lebensjahr vollendet haben.", "Er muss deutscher Staatsangehöriger sein.", "Er muss verheiratet sein.", "Er muss dem Betrieb ohne Unterbrechung länger als sechs Monate angehören.", "Er muss das 50. Lebensjahr vollendet haben und mindestens 25 Jahre berufstätig sein."], correctText: "Er muss dem Betrieb ohne Unterbrechung länger als sechs Monate angehören." },
+    { nr: 5, q: "Welche Kündigungsfrist gilt für alle Arbeitnehmer?", e: "Richtig ist: 4 Wochen auf den 15. eines Monats oder auf das Monatsende.", o: ["14 Tage auf das Monatsende", "6 Wochen auf Quartalsende", "4 Wochen auf das Monatsende", "4 Wochen auf den 15. eines Monats oder auf das Monatsende", "6 Wochen auf jeden Werktag"], correctText: "4 Wochen auf den 15. eines Monats oder auf das Monatsende" },
+    { nr: 6, q: "Welche Vereinbarung in einem Arbeitsvertrag ist unzulässig?", e: "Richtig ist: Der Jahresurlaub beträgt 20 Werktage.", o: ["Die tägliche Arbeitszeit beträgt 8 Stunden.", "Der Jahresurlaub beträgt 20 Werktage.", "Die Probezeit beträgt einen Monat.", "Lohn wird nach dem jeweils gültigen Tarifvertrag gezahlt.", "Für die Anschaffung von Arbeitskleidung wird ein Zuschuss gezahlt."], correctText: "Der Jahresurlaub beträgt 20 Werktage." },
+    { nr: 7, q: "In welchem Fall wird das Arbeitsverhältnis beendet?", e: "Richtig ist: Eine Arbeitnehmerin nimmt den vom Arbeitgeber vorgeschlagenen Aufhebungsvertrag an.", o: ["Der Arbeitgeber stirbt.", "Das Unternehmen wird verkauft und hat einen neuen Eigentümer.", "Eine Arbeitnehmerin tritt den Erziehungsurlaub an.", "Eine Arbeitnehmerin nimmt den vom Arbeitgeber vorgeschlagenen Aufhebungsvertrag an.", "Ein Arbeitnehmer wird zum Grundwehrdienst einberufen."], correctText: "Eine Arbeitnehmerin nimmt den vom Arbeitgeber vorgeschlagenen Aufhebungsvertrag an." },
+    { nr: 8, q: "Welche Aussage entspricht dem Bundesurlaubsgesetz?", e: "Richtig ist: Bei der zeitlichen Festlegung des Urlaubs sind die Urlaubswünsche des Arbeitnehmers und die betrieblichen Belange zu berücksichtigen.", o: ["Der Arbeitgeber kann keinen Einfluss auf die zeitliche Festlegung des Urlaubs nehmen.", "Der gesamte Urlaub muss immer zusammenhängend genommen werden.", "Bei der zeitlichen Festlegung des Urlaubs sind die Urlaubswünsche des Arbeitnehmers und die betrieblichen Belange zu berücksichtigen.", "In Tarifverträgen kann der Mindesturlaub herabgesetzt werden.", "Verzichtet der Arbeitnehmer auf seinen Urlaub, so muss der Arbeitgeber ihn durch Geld abgelten."], correctText: "Bei der zeitlichen Festlegung des Urlaubs sind die Urlaubswünsche des Arbeitnehmers und die betrieblichen Belange zu berücksichtigen." },
+    { nr: 9, q: "Eine Auszubildende hat nach ihrer Berufsausbildung das erste Arbeitsverhältnis begonnen. Nach welcher Betriebszugehörigkeit kann sie erstmals Urlaub beanspruchen?", e: "Richtig ist: Nach sechs Monaten.", o: ["Sofort nach Abschluss des Arbeitsvertrages", "Nach einem Monat", "Nach drei Monaten", "Nach sechs Monaten", "Nach zwölf Monaten"], correctText: "Nach sechs Monaten" },
+    { nr: 10, q: "Welche Personengruppen genießen einen besonderen Kündigungsschutz?", e: "Richtig ist: Werdende Mütter und Auszubildende.", o: ["Schwerbehinderte, junge Mütter", "Langjährige Betriebsbürger, leitende Angestellte", "Auszubildende, Teilzeitbeschäftigte", "Schwerbehinderte, jugendliche Arbeitnehmer", "Werdende Mütter, Auszubildende"], correctText: "Werdende Mütter, Auszubildende" },
+    { nr: 11, q: "Der Inhaber einer Firma wechselt. Welche Aussage zum Arbeitsverhältnis ist richtig?", e: "Richtig ist: Die Arbeitsverhältnisse bestehen zunächst mit unveränderten Rechten und Pflichten weiter.", o: ["Der neue Inhaber kann die Arbeitsbedingungen von sich aus neu festsetzen.", "Die Arbeitsverhältnisse bestehen zunächst mit unveränderten Rechten und Pflichten weiter.", "Alle Arbeitsverhältnisse sind gekündigt.", "Die Arbeitsverhältnisse können von beiden Seiten jederzeit fristlos gekündigt werden.", "Die Arbeitnehmer sind berechtigt, auf Wiedereinstellung zu klagen."], correctText: "Die Arbeitsverhältnisse bestehen zunächst mit unveränderten Rechten und Pflichten weiter." },
+    { nr: 12, q: "Ein Arbeitnehmer wurde gekündigt, ohne dass der Betriebsrat angehört wurde. Welche Rechtslage ergibt sich nach dem Betriebsverfassungsgesetz?", e: "Richtig ist: Die Kündigung ist unwirksam, da eine Anhörung des Betriebsrates erfolgen muss.", o: ["Die Kündigung ist wirksam, da weder die Anhörung noch die Zustimmung des Betriebsrates vorgeschrieben ist.", "Die Kündigung ist wirksam, da eine Anhörung des Betriebsrates nicht vorgeschrieben ist.", "Die Kündigung ist unwirksam, da eine Anhörung des Betriebsrates erfolgen muss.", "Die Kündigung ist unwirksam, da bei jeder Kündigung der Betriebsrat zustimmen muss.", "Die Kündigung wird erst durch die nachträgliche Anhörung des Betriebsrates wirksam."], correctText: "Die Kündigung ist unwirksam, da eine Anhörung des Betriebsrates erfolgen muss." },
+    { nr: 13, q: "Welche Angaben können einem einfachen Arbeitszeugnis entnommen werden?", e: "Richtig ist: Angaben über Art und Dauer der Beschäftigung.", o: ["Angaben über die Leistung des Arbeitnehmers", "Angaben über seine Betriebsrätstätigkeit", "Angaben über Art und Dauer der Beschäftigung", "Angaben über die Führung des Arbeitnehmers", "Angaben über das Sozialverhalten des Arbeitnehmers"], correctText: "Angaben über Art und Dauer der Beschäftigung" },
+    { nr: 14, q: "Welche Hauptpflicht übernimmt ein Arbeitgeber, wenn er einen Arbeitsvertrag abschließt?", e: "Richtig ist: Die Pflicht, die vereinbarte Vergütung zu bezahlen.", o: ["Die Pflicht, für die Weiterbildung eines Arbeitnehmers zu sorgen", "Die Pflicht, die vereinbarte Vergütung zu bezahlen", "Die Pflicht, die Vergütung immer im Voraus zu bezahlen", "Die Pflicht, sich den tarifvertraglichen Vereinbarungen zu unterwerfen", "Die Pflicht, den Arbeitnehmer angemessen am Gewinn zu beteiligen"], correctText: "Die Pflicht, die vereinbarte Vergütung zu bezahlen" },
+    { nr: 15, q: "Eine außerordentliche Kündigung ist nur gerechtfertigt, wenn ein wichtiger Grund vorliegt. In welchem Fall liegt ein wichtiger Grund vor?", e: "Richtig ist: Der Arbeitnehmer gibt Betriebsgeheimnisse gegen Entgelt preis.", o: ["Der Arbeitnehmer führt die ihm übertragenen Arbeiten schlampig aus.", "Der Arbeitnehmer wird zum Wehrdienst einberufen.", "Der Arbeitnehmer gibt Betriebsgeheimnisse gegen Entgelt preis.", "Der Arbeitnehmer fehlt häufig wegen Krankheit.", "Der Arbeitnehmer war in seiner Freizeit an einer Massenschlägerei von Fußballanhängern beteiligt."], correctText: "Der Arbeitnehmer gibt Betriebsgeheimnisse gegen Entgelt preis." },
+    { nr: 16, q: "Welche der genannten Fragen darf ein Arbeitgeber bei einem Einstellungsgespräch stellen?", e: "Richtig ist: Welche beruflichen Prüfungen wurden abgelegt und welche Noten wurden erreicht?", o: ["Welche beruflichen Prüfungen haben sie abgelegt und welche Noten haben Sie dabei erreicht?", "Welche Krankheiten haben Sie bisher gehabt?", "Beabsichtigen Sie, in nächster Zeit eine Ehe zu schließen?", "Gehören Sie einer politischen Partei an?", "Welches Vermögen besitzen Sie bzw. Ihre Eltern?"], correctText: "Welche beruflichen Prüfungen haben sie abgelegt und welche Noten haben Sie dabei erreicht?" },
+    { nr: 17, q: "Was versteht man unter Tarifautonomie?", e: "Richtig ist: Das Recht der Tarifvertragsparteien, Tarifverträge ohne staatliche Einmischung abzuschließen.", o: ["Das Recht der Arbeitgeber, übertarifliche Löhne zu zahlen", "Die Abhängigkeit der Lohnerhöhung von der Steigerung des Bruttosozialprodukts", "Die Pflicht der Arbeitgeber, mindestens Tariflohn zu zahlen", "Das Recht der Tarifvertragsparteien, Tarifverträge ohne staatliche Einmischung abzuschließen", "Das Recht der Gewerkschaften, einen Streik auszurufen"], correctText: "Das Recht der Tarifvertragsparteien, Tarifverträge ohne staatliche Einmischung abzuschließen" },
+    { nr: 18, q: "In einem Tarifkonflikt legen die organisierten Arbeitnehmer nach Aufruf der Gewerkschaft für eine Stunde die Arbeit nieder. Wie nennt man diese Arbeitskampfmaßnahme?", e: "Richtig ist: Warnstreik.", o: ["Warnstreik", "Generalstreik", "Schwerpunktstreik", "Wilder Streik", "Arbeitsboykott"], correctText: "Warnstreik" },
+    { nr: 19, q: "Die Arbeitnehmer einer Abteilung treten in einen Streik, der von der Gewerkschaft nicht unterstützt wird. Welche Maßnahme des Arbeitgebers ist rechtlich zulässig?", e: "Richtig ist: Fristlose Entlassung der an diesem Streik beteiligten Arbeitnehmer.", o: ["Sofortige Aussperrung aller Arbeitnehmer des Betriebs", "Fristlose Entlassung der an diesem Streik beteiligten Arbeitnehmer", "Sofortige Halbierung der Löhne und Gehälter der Streikenden", "Sofortige Streichung der übertariflichen Zahlungen an alle Arbeitnehmer des Betriebs", "Auflösung des Betriebsrats"], correctText: "Fristlose Entlassung der an diesem Streik beteiligten Arbeitnehmer" },
+    { nr: 20, q: "Welche Vereinbarung wäre in einem Tarifvertrag nicht zulässig?", e: "Richtig ist: Alle Arbeitnehmer eines Betriebes müssen Gewerkschaftsmitglieder sein.", o: ["Die Arbeitnehmer erhalten im Kalenderjahr 5 Tage Sonderurlaub für die Teilnahme an Bildungsmaßnahmen.", "Für Mehrarbeit wird ein Zuschlag von 35 % der regelmäßigen Vergütung gezahlt.", "Die Wochenarbeitszeit der Schichtarbeiter beträgt 38 Stunden.", "Die Laufzeit des Tarifvertrags beträgt 24 Monate.", "Alle Arbeitnehmer eines Betriebes müssen Gewerkschaftsmitglieder sein."], correctText: "Alle Arbeitnehmer eines Betriebes müssen Gewerkschaftsmitglieder sein." },
+    { nr: 21, q: "Was kann in einem Tarifvertrag nicht geregelt werden?", e: "Richtig ist: Täglicher Arbeitsbeginn.", o: ["Dauer des Urlaubs", "Höhe von Lohn und Gehalt", "Lohn- und Gehaltsgruppen", "Täglicher Arbeitsbeginn", "Regelmäßige wöchentliche Arbeitszeit"], correctText: "Täglicher Arbeitsbeginn" },
+    { nr: 22, q: "In Rahmentarifverträgen sind häufig Lohn- und Gehaltsgruppen ausgewiesen. Was ist für die Eingruppierung eines Arbeitnehmers ohne Bedeutung?", e: "Richtig ist: Familienstand des Arbeitnehmers.", o: ["Berufsausbildung des Arbeitnehmers", "Familienstand des Arbeitnehmers", "Körperliche Beanspruchung des Arbeitnehmers", "Verantwortung des Arbeitnehmers für 2 Personen", "Beschaffenheit des Arbeitsplatzes"], correctText: "Familienstand des Arbeitnehmers" },
+    { nr: 23, q: "Welche der genannten Vereinbarungen wäre in einer Betriebsvereinbarung rechtlich zulässig?", e: "Richtig ist: Arbeitnehmer, die mehr als 10 Jahre im Betrieb tätig sind, erhalten im Kalenderjahr einen tag Zusatzurlaub.", o: ["Die Arbeitnehmer sind zur Teilnahme an Betriebsfeiern und -ausflügen verpflichtet.", "Die Arbeitnehmer haben 10 % ihres Urlaubsgeldes an die Aktion „Brot für die Welt“ zu überweisen.", "Arbeitnehmer, die mehr als 10 Jahre im Betrieb tätig sind, erhalten im Kalenderjahr einen tag Zusatzurlaub.", "Die Arbeitnehmer verzichten auf das Recht der fristlosen Kündigung.", "Bei Erkrankung des Arbeitnehmers werden die ersten drei Tage als Urlaubstage angerechnet."], correctText: "Arbeitnehmer, die mehr als 10 Jahre im Betrieb tätig sind, erhalten im Kalenderjahr einen tag Zusatzurlaub." },
+    { nr: 24, q: "Welche der genannten Fragen wird nicht in einer Betriebsvereinbarung geregelt?", e: "Richtig ist: Finanzierung neuer Betriebseinrichtungen.", o: ["Betriebliche Ordnungs- und Sicherheitsvorschriften (Betriebsordnung)", "Verwaltung der Betriebskantine", "Fahrgeldzuschuss für die Arbeitnehmer", "Finanzierung neuer Betriebseinrichtungen", "Festsetzung von Akkordsätzen"], correctText: "Finanzierung neuer Betriebseinrichtungen" },
+    { nr: 25, q: "Wo ist die Mindestentlohnung von Arbeitnehmern geregelt?", e: "Richtig ist: Im Lohn- und Gehaltstarifvertrag.", o: ["Im Manteltarifvertrag", "Im Lohntarifvertrag", "Im Arbeitszeitgesetz", "Im Lohn- und Gehaltstarifvertrag"], correctText: "Im Lohn- und Gehaltstarifvertrag" },
+    { nr: 26, q: "Welches legale Mittel kann eine Gewerkschaft einsetzen, um bei Tarifauseinandersetzungen ihre Forderungen durchzusetzen?", e: "Richtig ist: Streik.", o: ["Blockade aller Betriebszufahrten", "Aussperrungen", "Betriebsbesetzungen", "Gewerkschaftsmitglieder sabotieren die Produktion", "Streik"], correctText: "Streik" },
+    { nr: 27, q: "Wer ist beim Abschluss eines Tarifvertrages beteiligt?", e: "Richtig ist: Der zuständige Arbeitgeberverband und die zuständige Gewerkschaft.", o: ["Das Arbeitsministerium", "Das Arbeitsgericht", "Die Industrie- und Handelskammer", "Die Handwerkskammer", "Der zuständige Arbeitgeberverband und die zuständige Gewerkschaft"], correctText: "Der zuständige Arbeitgeberverband und die zuständige Gewerkschaft" },
+    { nr: 28, q: "Die Satzung einer Gewerkschaft verlangt, dass eine Urabstimmung durchgeführt wird, bevor Arbeitskampfmaßnahmen eingeleitet werden. Welche Erläuterung hierzu ist richtig?", e: "Richtig ist: Die Arbeitnehmer, die Mitglieder der Gewerkschaft sind, stimmen über die geplanten Maßnahmen ab.", o: ["Alle Arbeitnehmer in dem betroffenen Tarifgebiet stimmen über diese Maßnahmen ab.", "Die Gewerkschaft muss mit dem zuständigen Arbeitgeberverband ihre geplanten Maßnahmen abstimmen.", "Die Arbeitnehmer, die Mitglieder der Gewerkschaft sind, stimmen über die geplanten Maßnahmen ab.", "Die Gewerkschaft muss ihre Maßnahmen mit dem Wirtschaftsministerium abklären.", "Es muss eine paritätische Schlichtungskommission gebildet werden. Deren Mitglieder stimmen über die geplanten Maßnahmen ab."], correctText: "Die Arbeitnehmer, die Mitglieder der Gewerkschaft sind, stimmen über die geplanten Maßnahmen ab." },
+    { nr: 29, q: "Zwischen dem Metallarbeitgeberverband und der IG Metall wurde ein Tarifvertrag abgeschlossen. Darf ein Arbeitgeber der Metallindustrie trotzdem untertarifliche Löhne zahlen?", e: "Richtig ist: Ja, wenn der Arbeitgeber dem Arbeitgeberverband nicht angehört und wenn der Tarifvertrag nicht für allgemein verbindlich erklärt wurde.", o: ["Ja, wenn die schlechte Auftragslage es erfordert.", "Ja, wenn der Betrieb seit mehr als drei Monaten Kurzarbeit hat.", "Ja, wenn das Arbeitsamt die Genehmigung dazu erteilt.", "Ja, wenn der Arbeitgeber dem Arbeitgeberverband nicht angehört und wenn der Tarifvertrag nicht für allgemein verbindlich erklärt wurde.", "Nein, jeder Arbeitgeber muss sich an den Tarifvertrag halten."], correctText: "Ja, wenn der Arbeitgeber dem Arbeitgeberverband nicht angehört und wenn der Tarifvertrag nicht für allgemein verbindlich erklärt wurde." },
+    { nr: 30, q: "Welche Aussage über Manteltarifverträge trifft zu?", e: "Richtig ist: Manteltarifverträge regeln Arbeitsbedingungen wie z. B. Arbeitszeit, Urlaub oder Überstundenzuschläge.", o: ["Manteltarifverträge regeln Arbeitsbedingungen wie z. B. Arbeitszeit, Urlaub oder Überstundenzuschläge.", "Manteltarifverträge regeln spezielle Besonderheiten des einzelnen Betriebs wie z. B. Pausenregelung, Arbeitsanfang, Arbeitsende. Sie werden zwischen Arbeitgeber und Betriebsrat vereinbart.", "Die Arbeitgeberverbände sind berechtigt, einen Manteltarifvertrag für allgemein verbindlich zu erklären.", "Die Gewerkschaften sind berechtigt, einen Manteltarifvertrag für allgemein verbindlich zu erklären.", "Wenn wichtige Gründe vorliegen, kann jeder Arbeitgeber von den Bestimmungen des Manteltarifvertrages abweichen."], correctText: "Manteltarifverträge regeln Arbeitsbedingungen wie z. B. Arbeitszeit, Urlaub oder Überstundenzuschläge." },
+    { nr: 31, q: "Welche Aussage über Tarifverträge ist richtig?", e: "Richtig ist: Während der Laufzeit eines Tarifvertrags sind Streik oder Aussperrung untersagt.", o: ["Während der Laufzeit eines Tarifvertrags sind Streik oder Aussperrung untersagt.", "Die Laufzeit der Tarifverträge muss nach dem Tarifvertragsgesetz mindestens 12 Monate betragen.", "Nach dem Tarifvertragsgesetz müssen Tarifverträge drei Monate vor Ablauf der Laufzeit gekündigt werden.", "Die meisten Tarifverträge werden zwischen dem DGB und den Arbeitgeberverbänden abgeschlossen.", "Die im Tarifvertrag vereinbarten Arbeitsbedingungen können beim Vorliegen zwingender Gründe, z. B. Rezession, unterschritten werden."], correctText: "Während der Laufzeit eines Tarifvertrags sind Streik oder Aussperrung untersagt." },
+    { nr: 32, q: "Welche Aussage über Tarifverträge ist richtig?", e: "Richtig ist: Tarifverträge dürfen nicht gegen geltendes Recht verstoßen.", o: ["Tarifverträge werden immer von den Spitzenorganisationen auf Bundesebene ausgehandelt und gelten dann für das gesamte Bundesgebiet.", "Tarifverträge dürfen nicht gegen geltendes Recht verstoßen.", "Tarifverträge müssen vom Bundesarbeitsministerium genehmigt werden.", "Tarifverträge können jederzeit von beiden Vertragspartnern gekündigt werden."], correctText: "Tarifverträge dürfen nicht gegen geltendes Recht verstoßen." },
+    { nr: 33, q: "In einem allgemein verbindlichen Tarifvertrag ist eine bestimmte Entlohnung festgelegt. Welche Bedeutung hat diese Festlegung?", e: "Richtig ist: Die Entlohnung darf nicht unterschritten werden.", o: ["Die Entlohnung darf nicht überschritten werden.", "Die Höhe der Entlohnung ist völlig unverbindlich.", "Die Entlohnung kann geringfügig über- oder unterschritten werden.", "Die Entlohnung darf nicht unterschritten werden."], correctText: "Die Entlohnung darf nicht unterschritten werden." },
+    { nr: 34, q: "Eine Arbeitnehmerin ist Mitglied der zuständigen Gewerkschaft. Ihr Arbeitgeber gehört dem entsprechenden Arbeitgeberverband an. Wonach richtet sich die Höhe des Arbeitslohnes?", e: "Richtig ist: Die Lohnhöhe richtet sich nach dem gültigen Lohntarifvertrag.", o: ["Die Lohnhöhe richtet sich nach dem gültigen Lohntarifvertrag.", "Die Lohnhöhe richtet sich nach den Empfehlungen der Gewerkschaft.", "Die Lohnhöhe muss zwischen den Vertragsparteien frei ausgehandelt werden.", "Die Lohnhöhe richtet sich nach dem Mindestsatz der Sozialhilfe.", "Die Lohnhöhe wird gemeinsam von Arbeitgeber und Betriebsrat festgelegt."], correctText: "Die Lohnhöhe richtet sich nach dem gültigen Lohntarifvertrag." },
+    { nr: 35, q: "Was ist im Betriebsverfassungsgesetz nicht geregelt?", e: "Richtig ist: Erlass von Unfallverhütungsvorschriften.", o: ["Mitbestimmungsrechte des Betriebsrats", "Recht zur Durchführung von Betriebsratswahlen", "Erlass von Unfallverhütungsvorschriften", "Aufgaben der Jugend- und Auszubildendenvertretung", "Zusammensetzung des Betriebsrats"], correctText: "Erlass von Unfallverhütungsvorschriften" },
+    { nr: 36, q: "Für welche Betriebe sieht das Betriebsverfassungsgesetz die Wahl eines Betriebsrates vor?", e: "Richtig ist: Für Betriebe mit mindestens fünf ständigen wahlberechtigten Arbeitnehmern, von denen drei wählbar sein müssen.", o: ["Für Betriebe, in denen mehr als drei Arbeitnehmer beschäftigt werden.", "Für Betriebe, in denen mindestens fünf ständige wahlberechtigte Arbeitnehmer beschäftigt werden, von denen drei wählbar sein müssen.", "Für Betriebe, die einen Jahresumsatz von mindestens 25.000 € erzielen.", "Für Betriebe, in denen mindestens drei Arbeitnehmer beschäftigt werden, von denen mindestens einer wählbar ist.", "Für Betriebe, in denen mindestens vier ständige Arbeitnehmer beschäftigt werden und deren Jahresumsatz mindestens 50.000 € beträgt."], correctText: "Für Betriebe, in denen mindestens fünf ständige wahlberechtigte Arbeitnehmer beschäftigt werden, von denen drei wählbar sein müssen." },
+    { nr: 37, q: "In welchem Fall können die Arbeitnehmer eines Industriebetriebs auf der Wahl eines Betriebsrates bzw. eines Betriebsobmannes bestehen?", e: "Richtig ist: Wenn mindestens 5 ständige wahlberechtigte Arbeitnehmer, von denen drei wählbar sind, beschäftigt werden.", o: ["Wenn in diesem Betrieb mindestens 3 ständige wahlberechtigte Arbeitnehmer, die auch wählbar sind, beschäftigt werden.", "Nur dann, wenn im Betrieb mehr als 10 ständige wahlberechtigte Arbeitnehmer, von denen 5 wählbar sind, beschäftigt werden.", "Wenn mindestens 5 ständige wahlberechtigte Arbeitnehmer, von denen drei wählbar sind, beschäftigt werden.", "Nur dann, wenn mehr als 20 ständige wahlberechtigte Arbeitnehmer beschäftigt werden.", "Nur dann, wenn mehr als 50 wählbare Arbeitnehmer beschäftigt werden."], correctText: "Wenn mindestens 5 ständige wahlberechtigte Arbeitnehmer, von denen drei wählbar sind, beschäftigt werden." },
+    { nr: 38, q: "Welche Aussage über die Betriebsratswahlen ist falsch?", e: "Richtig ist: Wahlpflicht besteht für alle organisierten Arbeitnehmer.", o: ["Sie werden alle vier Jahre durchgeführt.", "Sie erfolgen geheim und unmittelbar.", "Wahlberechtigt sind alle Arbeitnehmer, die das 18. Lebensjahr vollendet haben.", "Wahlpflicht besteht für alle organisierten Arbeitnehmer.", "Die Kosten der Wahl tragen die Arbeitgeber."], correctText: "Wahlpflicht besteht für alle organisierten Arbeitnehmer." },
+    { nr: 39, q: "Hat die Jugend- und Auszubildendenvertretung das Recht, selbst mit dem Arbeitgeber zu verhandeln?", e: "Richtig ist: Ja, wenn es um Fragen der Arbeitszeit und der Ausbildungsvergütung geht.", o: ["Ja, aber nur, wenn es um Fragen der Berufsausbildung geht.", "Nein, denn mit dem Arbeitgeber verhandelt nur der Vorsitzende des Betriebsrats.", "Ja, wenn es um Fragen der Arbeitszeit und der Ausbildungsvergütung geht.", "Nein, sie muss den Betriebsrat einschalten.", "Ja, aber nur wenn es um Fragen des Berufsschulunterrichts geht."], correctText: "Ja, wenn es um Fragen der Arbeitszeit und der Ausbildungsvergütung geht." },
+    { nr: 40, q: "Welche der genannten Personen ist kein Arbeitnehmer im Sinne des Betriebsverfassungsgesetzes?", e: "Richtig ist: Vorstandsmitglied einer AG.", o: ["Umschüler", "Vorstandsmitglied einer AG", "Sekretärin des Arbeitgebers", "Gastarbeiter", "Teilzeitbeschäftigte"], correctText: "Vorstandsmitglied einer AG" },
+    { nr: 41, q: "In einem Betrieb soll ein Betriebsrat gewählt werden. Wer kann in den Betriebsrat gewählt werden?", e: "Richtig ist: Wahlberechtigte, die das 18. Lebensjahr vollendet haben und mindestens 6 Monate im Betrieb sind.", o: ["Nur die Wahlberechtigten, die das 24. Lebensjahr vollendet haben.", "Nur die Wahlberechtigten, die einer Gewerkschaft angehören.", "Nur die Wahlberechtigten, die die deutsche Staatsangehörigkeit besitzen.", "Nur die Wahlberechtigten, die das 18. Lebensjahr vollendet haben und mindestens 6 Monate im Betrieb sind."], correctText: "Nur die Wahlberechtigten, die das 18. Lebensjahr vollendet haben und mindestens 6 Monate im Betrieb sind." },
+    { nr: 42, q: "Welche Aussage über den Vorsitzenden des Betriebsrats ist richtig?", e: "Richtig ist: Den Vorsitzenden des Betriebsrats wählt der Betriebsrat aus seiner Mitte.", o: ["Vorsitzender des Betriebsrats ist derjenige, der bei der Betriebsratswahl die meisten Stimmen erhalten hat.", "Der Betriebsratsvorsitzende muss der größeren der beiden Gruppen angehören, wenn Arbeiter und Angestellte im Betrieb tätig sind.", "Zum Betriebsratsvorsitzenden kann vom Betriebsrat auch ein Arbeitnehmer gewählt werden, der nicht im Betriebsrat ist.", "Sind Arbeiter und Angestellte im Betriebsrat vertreten, muss eine Gruppe ein Betriebsratsmitglied zum Vorsitzenden wählen.", "Den Vorsitzenden des Betriebsrats wählt der Betriebsrat aus seiner Mitte."], correctText: "Den Vorsitzenden des Betriebsrats wählt der Betriebsrat aus seiner Mitte." },
+    { nr: 43, q: "Wer übernimmt die Kosten, die durch die Tätigkeit des Betriebsrats verursacht werden?", e: "Richtig ist: Der Arbeitgeber.", o: ["Der Arbeitgeber", "Das Arbeitsamt", "Die im Betrieb vertretenen Gewerkschaften", "Die Betriebsratsmitglieder selbst, da die Tätigkeit ehrenamtlich ist.", "Die Kosten werden auf alle im Betrieb beschäftigten Arbeitnehmer umgelegt."], correctText: "Der Arbeitgeber" },
+    { nr: 44, q: "Welches ist keine gesetzliche Aufgabe des Betriebsrats?", e: "Richtig ist: Darauf zu achten, dass die Produktionskosten niedrig bleiben und keine Arbeitsplätze gefährden.", o: ["Die Einhaltung der Tarifverträge und Unfallverhütungsvorschriften zu überwachen.", "Mit der Jugend- und Auszubildendenvertretung eng zusammenzuarbeiten.", "Die Eingliederung von Schwerbehinderten zu fördern.", "Darauf zu achten, dass die Produktionskosten niedrig bleiben und keine Arbeitsplätze gefährden.", "Die Beschäftigung älterer Arbeitnehmer im Betrieb zu fördern."], correctText: "Darauf zu achten, dass die Produktionskosten niedrig bleiben und keine Arbeitsplätze gefährden." },
+    { nr: 45, q: "Wer ist wahlberechtigt bei der Wahl des Betriebsrats?", e: "Richtig ist: Alle Arbeitnehmer, die mindestens 18 Jahre alt sind.", o: ["Alle Arbeitnehmer, die dem Betrieb mindestens 6 Monate angehören.", "Alle Arbeitnehmer, die mindestens 18 Jahre alt sind.", "Alle Arbeitnehmer des Betriebes.", "Alle Arbeitnehmer mit deutscher Staatsangehörigkeit.", "Alle Arbeitnehmer, die Mitglied einer Gewerkschaft sind."], correctText: "Alle Arbeitnehmer, die mindestens 18 Jahre alt sind." },
+    { nr: 46, q: "Ein 24-jähriger Arbeitnehmer will in seinem Betrieb bei der Wahl zur Jugend- und Auszubildendenvertretung kandidieren. Darf er gewählt werden?", e: "Richtig ist: Ja, denn er hat das 25. Lebensjahr noch nicht vollendet.", o: ["Ja, denn er hat das 25. Lebensjahr noch nicht vollendet.", "Nein, denn er ist bereits älter als 18 Jahre und somit volljährig.", "Nein, denn während seiner Amtszeit würde er das 25. Lebensjahr erreichen.", "Ja, wenn er noch Auszubildender ist; in diesem Fall ist das Lebensalter unerheblich.", "Ja, aber sobald er 25 Jahre alt wird, muss er aus dem Amt ausscheiden."], correctText: "Ja, denn er hat das 25. Lebensjahr noch nicht vollendet." },
+    { nr: 47, q: "Wo werden die Einzelheiten der Tätigkeit des Betriebsrates gesetzlich geregelt?", e: "Richtig ist: Im Betriebsverfassungsgesetz.", o: ["Im Mitbestimmungsgesetz", "Im Arbeitsförderungsgesetz", "Im Betriebsverfassungsgesetz", "In der Gewerbeordnung", "Im Tarifvertragsgesetz"], correctText: "Im Betriebsverfassungsgesetz" },
+    { nr: 48, q: "In welchem Fall darf der Arbeitgeber nach dem Betriebsverfassungsgesetz nicht allein entscheiden?", e: "Richtig ist: Über Beginn und Ende der täglichen Arbeitszeit sowie der Pausen.", o: ["Über die geplanten Werbemaßnahmen", "Über die Gehälter der leitenden Angestellten", "Über die Erzeugnisse, die er herstellen will", "Über Beginn und Ende der täglichen Arbeitszeit sowie der Pausen", "Über die Finanzierung von Investitionen"], correctText: "Über Beginn und Ende der täglichen Arbeitszeit sowie der Pausen" },
+    { nr: 49, q: "Welche Aussage über den Streik ist richtig?", e: "Richtig ist: Ein Streik ist nur dann rechtmäßig, wenn er von einer Gewerkschaft geführt wird.", o: ["Jeder Streik bedarf der Zustimmung des Betriebsrats.", "Ein Streik ist nur dann rechtmäßig, wenn zuvor eine Urabstimmung stattgefunden hat, in der mindestens 75 % der Arbeitnehmer für einen Streik stimmen.", "Ein Streik darf erst begonnen werden, wenn der Bundesminister für Arbeit seine Zustimmung erteilt hat.", "Ein Streik ist nur dann rechtmäßig, wenn er von einer Gewerkschaft geführt wird.", "Nach 12 Wochen kann der Bundesminister für Arbeit einen Streik für beendet erklären, um die Wirtschaft vor Schaden zu bewahren."], correctText: "Ein Streik ist nur dann rechtmäßig, wenn er von einer Gewerkschaft geführt wird." },
+    { nr: 50, q: "Welche Aussage über den Deutschen Gewerkschaftsbund (DGB) ist richtig?", e: "Richtig ist: Er ist die Dachorganisation der im DGB zusammengeschlossenen Einzelgewerkschaften.", o: ["Der Deutsche Gewerkschaftsbund kann zu Problemen des Schulwesens zu äußern.", "Er ist nicht berechtigt, sich zu Problemen des Schulwesens zu äußern.", "Er ist von den Weisungen der Bundesregierung abhängig.", "Er enthält sich grundsätzlich aller Stellungnahmen zu gesellschaftspolitischen Fragen.", "Er ist die Dachorganisation der im DGB zusammengeschlossenen Einzelgewerkschaften."], correctText: "Er ist die Dachorganisation der im DGB zusammengeschlossenen Einzelgewerkschaften." },
+    { nr: 51, q: "Welche Leistungen gewähren die Gewerkschaften ihren Mitgliedern nicht?", e: "Richtig ist: Unterstützung bei Betriebsunfällen.", o: ["Unterstützungsleistungen bei Streiks", "Rechtsschutz bei Streitigkeiten aus dem Arbeitsverhältnis", "Unterstützung bei Betriebsunfällen", "Bildungsmaßnahmen für Jugendliche", "Vertretung vor dem Arbeitsgericht"], correctText: "Unterstützung bei Betriebsunfällen" },
+    { nr: 52, q: "Welcher der genannten Vorteile ergibt sich aus der Zugehörigkeit zu einer Gewerkschaft für den Arbeitnehmer?", e: "Richtig ist: Rechtsvertretung bei Streitigkeiten vor dem Arbeitsgericht.", o: ["Rechtsvertretung bei Streitigkeiten vor dem Arbeitsgericht", "Geringerer Beitrag zur Arbeitslosenversicherung", "Höheres Krankengeld", "Anspruch auf zwei Wochen Bildungsurlaub pro Jahr", "Höherer Tariflohn"], correctText: "Rechtsvertretung bei Streitigkeiten vor dem Arbeitsgericht" },
+    { nr: 53, q: "Wonach richtet es sich, welcher Einzelgewerkschaft des DGB ein Arbeitnehmer angehören kann?", e: "Richtig ist: Nach der Zugehörigkeit seines Betriebes zu einem bestimmten Wirtschaftszweig.", o: ["Nach seiner Stellung im Betrieb", "Nach seiner Ausbildung", "Nach der Zugehörigkeit seines Betriebes zu einem bestimmten Wirtschaftszweig", "Nach dem Beschäftigungsverhältnis", "Nach der freien Wahl des Arbeitnehmers"], correctText: "Nach der Zugehörigkeit seines Betriebes zu einem bestimmten Wirtschaftszweig" },
+    { nr: 54, q: "Welche Aussage über die Gewerkschaften ist richtig?", e: "Richtig ist: Die Gewerkschaften vertreten die Forderungen der organisierten Arbeitnehmer gegenüber den Arbeitgebern.", o: ["Gewerkschaftsmitglied kann man erst nach Vollendung des 21. Lebensjahres werden.", "Die Gewerkschaften schließen mit den Unternehmungsleitungen Betriebsvereinbarungen ab.", "Die Gewerkschaften vertreten die Forderungen der organisierten Arbeitnehmer gegenüber den Arbeitgebern.", "Die Gewerkschaften sind Zusammenschlüsse aller Beschäftigten eines Wirtschaftszweiges.", "Die Gewerkschaften dürfen Tarifverträge nur im Einvernehmen mit den Arbeitgebern kündigen."], correctText: "Die Gewerkschaften vertreten die Forderungen der organisierten Arbeitnehmer gegenüber den Arbeitgebern." },
+    { nr: 55, q: "Welche Aussage über die Betriebsversammlung ist richtig?", e: "Richtig ist: In jedem Kalendervierteljahr hat der Betriebsrat in einer Betriebsversammlung einen Tätigkeitsbericht abzugeben.", o: ["Nur Gewerkschaftsmitglieder dürfen an einer Betriebsversammlung teilnehmen.", "Betriebsversammlungen sind öffentliche Veranstaltungen, an denen jedermann teilnehmen darf.", "In jedem Kalendervierteljahr hat der Betriebsrat in einer Betriebsversammlung einen Tätigkeitsbericht abzugeben.", "Die Betriebsversammlung wird vom Arbeitgeber einberufen, wenn er es für nötig hält.", "Die Kosten der Betriebsversammlung trägt der Arbeitgeber."], correctText: "In jedem Kalendervierteljahr hat der Betriebsrat in einer Betriebsversammlung einen Tätigkeitsbericht abzugeben." },
+    { nr: 56, q: "Welche Aussage über die Arbeitsgerichtsbarkeit ist nicht richtig?", e: "Richtig ist: Die Kosten des Verfahrens trägt immer der Arbeitgeber.", o: ["In allen Instanzen wirken Vertreter der Arbeitgeber und der Arbeitnehmer bei der Urteilsfindung mit.", "Vor Beginn der eigentlichen Verhandlung hat der Vorsitzende eine Güteverhandlung anzusetzen, in der eine gütliche Einigung versucht werden soll.", "Vor dem Arbeitsgericht besteht kein „Anwaltszwang“.", "Die Kosten des Verfahrens trägt immer der Arbeitgeber.", "Die Arbeitsgerichtsbarkeit besteht aus drei Instanzen."], correctText: "Die Kosten des Verfahrens trägt immer der Arbeitgeber." },
+    { nr: 57, q: "Welche Aussage über die Betriebsversammlung im Sinne des Betriebsverfassungsgesetzes ist richtig?", e: "Richtig ist: Ist eine vom Betriebsrat einberufene Versammlung der Arbeitnehmer eines Betriebes, an welcher der Arbeitgeber teilnehmen darf.", o: ["Die Betriebsversammlung ist eine Sitzung des Betriebsrats.", "Ist eine Zusammenkunft der Aktionäre eines Betriebes, wird vom Arbeitgeber geleitet.", "Ist eine vom Arbeitgeber geleitete Versammlung der Arbeitnehmer eines Betriebes.", "Ist eine vom Betriebsrat einberufene Versammlung der Arbeitnehmer eines Betriebes, an welcher der Arbeitgeber teilnehmen darf.", "Ist eine vom Betriebsrat einberufene Versammlung der Arbeitnehmer eines Betriebes, an welcher der Arbeitgeber teilnehmen darf."], correctText: "Ist eine vom Betriebsrat einberufene Versammlung der Arbeitnehmer eines Betriebes, an welcher der Arbeitgeber teilnehmen darf." },
+    { nr: 58, q: "Ein Firmeninhaber vereinbart im Mai mit einem Jugendlichen und dessen Eltern, den Jugendlichen ab 1. September zum Industriemechaniker auszubilden. Was muss der Firmeninhaber danach tun?", e: "Richtig ist: Er muss unverzüglich den Berufsausbildungsvertrag schriftlich abschließen.", o: ["Er muss unverzüglich den Berufsausbildungsvertrag schriftlich abschließen.", "Er muss den Jugendlichen sofort bei der Berufsschule anmelden.", "Er muss unverzüglich das Arbeitsamt um Genehmigung zur Einstellung bitten.", "Er muss ab 1. Juli die Ausbildungsvergütung zahlen.", "Er muss bis spätestens Ende August das Kultusministerium um Genehmigung zur Einstellung bitten."], correctText: "Er muss unverzüglich den Berufsausbildungsvertrag schriftlich abschließen." },
+    { nr: 59, q: "Wer entscheidet in letzter Instanz bei Streitigkeiten aus dem Berufsausbildungsverhältnis?", e: "Richtig ist: Das Arbeitsgericht.", o: ["Der Betriebsrat", "Der Schlichtungsausschuss des Fachverbands", "Die Industrie- und Handelskammer", "Das Arbeitsgericht", "Das Landgericht"], correctText: "Das Arbeitsgericht" },
+    { nr: 60, q: "Wer stellt nach dem Berufsbildungsgesetz fest, welcher Betrieb ausbilden darf?", e: "Richtig ist: Die zuständige Kammer, z. B. IHK oder Handwerkskammer.", o: ["Das Arbeitsamt", "Das Gewerbeaufsichtsamt", "Die zuständige Gewerkschaft", "Die Berufsgenossenschaft", "Die zuständige Kammer, wie z. B. die Industrie- und Handelskammer oder die Handwerkskammer"], correctText: "Die zuständige Kammer, wie z. B. die Industrie- und Handelskammer oder die Handwerkskammer" },
+    { nr: 61, q: "Welche Probezeit darf bei einem Ausbildungsverhältnis höchstens vereinbart werden?", e: "Richtig ist: 4 Monate.", o: ["3 Wochen", "1 Monat", "2 Monate", "3 Monate", "4 Monate"], correctText: "4 Monate" },
+    { nr: 62, q: "In welchem Fall kann ein Ausbildungsverhältnis auch nach der Probezeit gekündigt werden?", e: "Richtig ist: Vom Auszubildenden bei Berufsaufgabe oder Berufswechsel mit 4 Wochen Kündigungsfrist.", o: ["Vom Auszubildenden bei Berufsaufgabe oder bei Berufswechsel mit einer Kündigungsfrist von 4 Wochen.", "Vom Ausbildenden jederzeit fristlos ohne Angabe von Gründen.", "Vom Ausbildenden bei rückläufiger Auftragslage mit einer 4-monatigen Kündigungsfrist.", "Vom Ausbildenden jederzeit, wenn er feststellt, dass der Auszubildende das Ausbildungsziel nicht erreichen wird.", "Vom Ausbildenden jederzeit, ohne Angabe von Gründen, mit einer Kündigungsfrist von 4 Wochen."], correctText: "Vom Auszubildenden bei Berufsaufgabe oder bei Berufswechsel mit einer Kündigungsfrist von 4 Wochen." },
+    { nr: 63, q: "Was enthält eine Ausbildungsordnung?", e: "Richtig ist: Die zu vermittelnden Fertigkeiten und Kenntnisse.", o: ["Bestimmungen über die Höhe der Ausbildungsvergütung.", "Bestimmungen über die Urlaubsdauer.", "Versetzungspläne in die einzelnen Betriebsabteilungen.", "Richtlinien für den Berufsschulunterricht.", "Bestimmungen über die Fertigkeiten und Kenntnisse, die während der Berufsausbildung zu vermitteln sind."], correctText: "Bestimmungen über die Fertigkeiten und Kenntnisse, die während der Berufsausbildung zu vermitteln sind." },
+    { nr: 64, q: "Die Berufsausbildung erfolgt im Ausbildungsbetrieb und in der Berufsschule. Wie wird diese Art der Ausbildung genannt?", e: "Richtig ist: Duales System.", o: ["Berufsgrundbildung", "Duales System", "Überbetriebliche Ausbildung", "Berufsvorbereitung", "Berufsfortbildung"], correctText: "Duales System" },
+    { nr: 65, q: "Warum wird die berufliche Flexibilität für alle Arbeitnehmer immer wichtiger?", e: "Richtig ist: Weil sich technische und wirtschaftliche Verhältnisse immer schneller verändern.", o: ["Weil die Unternehmungen immer häufiger und immer schneller den Standort ihrer Betriebe verlegen.", "Weil sich die technischen und wirtschaftlichen Verhältnisse in der Arbeitswelt immer schneller verändern.", "Weil sich die Lebensarbeitszeit durch erheblich verkürzte Wochenarbeitszeiten immer schneller verändert.", "Weil durch Einsparungen der Deutschen Bahn AG und der Gemeinden die Arbeitsplätze immer schlechter mit öffentlichen Verkehrsmitteln erreichbar sind.", "Weil die Arbeitszeit immer kürzer und die Möglichkeiten gut bezahlter Freizeit immer besser werden."], correctText: "Weil sich die technischen und wirtschaftlichen Verhältnisse in der Arbeitswelt immer schneller verändern." },
+    { nr: 66, q: "Welche Aussage zur beruflichen Fortbildung ist richtig?", e: "Richtig ist: Sie erhält, verbessert und erweitert berufliche Kenntnisse und Fertigkeiten.", o: ["Sie hat zum Ziel, die beruflichen Kenntnisse und Fertigkeiten zu erhalten, zu verbessern und zu erweitern.", "Sie wird vor allem in den Berufsschulen durchgeführt.", "Sie ist nur ab dem 25. Lebensjahr möglich und bis zum 45. Lebensjahr sinnvoll.", "Eine Ausbildung zum Hauptschulabschluss ist eine Fortbildung.", "Sie endet stets mit einer Prüfung bei der Handwerkskammer."], correctText: "Sie hat zum Ziel, die beruflichen Kenntnisse und Fertigkeiten zu erhalten, zu verbessern und zu erweitern." },
+    { nr: 67, q: "Welche Aussage über die berufliche Fortbildung ist richtig?", e: "Richtig ist: Sie vermittelt weitergehende Fertigkeiten und Kenntnisse im erlernten Beruf.", o: ["Sie soll die Ausübung einer anderen Berufstätigkeit ermöglichen.", "Sie soll berufliche Kenntnisse und Fertigkeiten nachholen.", "Sie soll als besondere Förderungsmaßnahme weiter gehende Fertigkeiten und Kenntnisse im erlernten Beruf vermitteln.", "Sie ist nur sinnvoll, wenn man beruflich aufsteigen will.", "Sie wird nur bis zum 35. Lebensjahr vom Arbeitsamt gefördert."], correctText: "Sie soll als besondere Förderungsmaßnahme weiter gehende Fertigkeiten und Kenntnisse im erlernten Beruf vermitteln." },
+    { nr: 68, q: "Welche Bildungsmaßnahme zählt zur beruflichen Fortbildung?", e: "Richtig ist: Besuch einer Meisterschule.", o: ["Nachholen des Hauptschulabschlusses", "Besuch einer Meisterschule", "Teilnahme an einer Umschulungsmaßnahme", "Berufsausbildung in Berufsschule und Ausbildungsbetrieb", "Betriebspraktikum nach der Realschule"], correctText: "Besuch einer Meisterschule" },
+    { nr: 69, q: "Welche Institution ist gesetzlich verpflichtet, Arbeitnehmer im Bereich Fortbildung und Umschulung zu beraten?", e: "Richtig ist: Agentur für Arbeit.", o: ["Gewerkschaft", "Agentur für Arbeit (Arbeitsamt)", "Industrie- und Handelskammer", "Handwerkskammer", "Arbeitgeberverband"], correctText: "Agentur für Arbeit (Arbeitsamt)" },
+    { nr: 70, q: "Welche Aufgabe hat unter anderem die Industrie- und Handelskammer bzw. die Handwerkskammer?", e: "Richtig ist: Feststellen der Eignung von Ausbildungsstätten.", o: ["Festlegen der Höhe der Ausbildungsvergütung", "Feststellen der Eignung von Ausbildungsstätten", "Ausarbeitung der sachlichen und zeitlichen Gliederung der Berufsausbildung", "Kostenlose Bereitstellung des Prüfungsmaterials für die Zwischen- und Abschlussprüfungen", "Überwachung des Berufsschulunterrichts"], correctText: "Feststellen der Eignung von Ausbildungsstätten" },
+    { nr: 71, q: "Was versteht man unter beruflicher Umschulung?", e: "Richtig ist: Eine Ausbildung für arbeitslose Jugendliche, die den Wechsel in eine andere zukunftsorientierte Tätigkeit ermöglichen soll.", o: ["Eine Maßnahme, in der Aussiedler auf die Arbeit in der Industrie vorbereitet werden.", "Eine Maßnahme in der Berufsschule, in der Lehrlinge auf die Gesellenprüfung vorbereitet werden.", "Eine Ausbildung für arbeitslose Jugendliche, die den Wechsel in eine andere zukunftsorientierte Tätigkeit ermöglichen soll.", "Eine Ausbildungshilfe für arbeitslose Jugendliche, um deren Aussichten auf einen Arbeitsplatz zu verbessern.", "Eine Maßnahme der Handwerkskammer, in der Gesellen eines bestimmten Handwerks in neuen Technologien unterwiesen werden."], correctText: "Eine Ausbildung für arbeitslose Jugendliche, die den Wechsel in eine andere zukunftsorientierte Tätigkeit ermöglichen soll." },
+    { nr: 72, q: "Welche Aussage über die Kinderarbeit ist richtig?", e: "Richtig ist: Die Beschäftigung von Kindern ist grundsätzlich verboten.", o: ["Die Kinderarbeit ist nur noch in der Landwirtschaft erlaubt.", "Kinder dürfen im elterlichen Betrieb wöchentlich 16 Stunden beschäftigt werden.", "Kinder dürfen nur in der Zeit von 10 bis 18 Uhr beschäftigt werden.", "Die Beschäftigung von Kindern ist grundsätzlich verboten.", "Kinderarbeit ist nur in den Schulferien zulässig."], correctText: "Die Beschäftigung von Kindern ist grundsätzlich verboten." },
+    { nr: 73, q: "Mit welchen der genannten Arbeiten dürfen Jugendliche grundsätzlich nicht beschäftigt werden?", e: "Richtig ist: Mit Akkord- und Fließbandarbeiten.", o: ["Mit Akkord- und Fließbandarbeiten.", "Mit Arbeiten, die auch den Einsatz körperlicher Kräfte erfordern.", "Mit Arbeiten in Räumen, die ausschließlich künstlich beleuchtet sind.", "Mit Arbeiten, die überwiegend im Freien zu verrichten sind.", "Mit Arbeiten, die vorwiegend in stehender Haltung zu verrichten sind."], correctText: "Mit Akkord- und Fließbandarbeiten." },
+    { nr: 74, q: "Wer überwacht die Einhaltung des Jugendarbeitsschutzgesetzes?", e: "Richtig ist: Das Gewerbeaufsichtsamt.", o: ["Die Handwerkskammer bzw. Industrie- und Handelskammer", "Die Polizei", "Das Gewerbeaufsichtsamt", "Die Berufsgenossenschaft", "Die zuständige Innung"], correctText: "Das Gewerbeaufsichtsamt" },
+    { nr: 75, q: "Wie viele Tage Urlaub kann ein Auszubildender nach dem Jugendarbeitsschutzgesetz beanspruchen, wenn er zu Jahresbeginn 17 Jahre alt ist?", e: "Richtig ist: 25 Werktage.", o: ["18 Werktage", "23 Werktage", "25 Werktage", "27 Werktage", "30 Werktage"], correctText: "25 Werktage" },
+    { nr: 76, q: "Bis zu welchem Alter gilt normalerweise das Jugendarbeitsschutzgesetz?", e: "Richtig ist: Bis zur Vollendung des 18. Lebensjahres.", o: ["16. Lebensjahres", "18. Lebensjahres", "21. Lebensjahres", "14. Lebensjahres", "17. Lebensjahres"], correctText: "18. Lebensjahres" },
+    { nr: 77, q: "Welche Aussage über die betriebliche Beschäftigung von werdenden Müttern ist richtig?", e: "Richtig ist: Werdende Mütter dürfen nicht mit Akkordarbeiten beschäftigt werden.", o: ["Werdende Mütter dürfen in den letzten 8 Wochen vor der Entbindung nicht mehr beschäftigt werden.", "Werdende Mütter dürfen mit Akkordarbeiten beschäftigt werden, wenn sie dazu ihr Einverständnis geben.", "Werdende Mütter dürfen nicht mit Akkordarbeiten beschäftigt werden.", "Mütter dürfen in den 10 Wochen nach der Entbindung nicht beschäftigt werden.", "Werdende Mütter dürfen in der Zeit zwischen 18 und 7 Uhr nicht beschäftigt werden."], correctText: "Werdende Mütter dürfen nicht mit Akkordarbeiten beschäftigt werden." },
+    { nr: 78, q: "In welchem Forum dürfen werdende Mütter nicht beschäftigt werden?", e: "Richtig ist: 6 Wochen vor und 8 Wochen nach der Entbindung.", o: ["4 Wochen vor und 6 Wochen nach der Entbindung", "4 Wochen vor und 8 Wochen nach der Entbindung", "6 Wochen vor und 6 Wochen nach der Entbindung", "6 Wochen vor und 8 Wochen nach der Entbindung", "6 Wochen vor und 10 Wochen nach der Entbindung"], correctText: "6 Wochen vor und 8 Wochen nach der Entbindung" },
+    { nr: 79, q: "Welche Aussage über den Schwerbehindertenschutz ist richtig?", e: "Richtig ist: Schwerbehinderte können nur mit Zustimmung der Hauptfürsorgestelle gekündigt werden.", o: ["Schwerbehinderte haben Anspruch auf zusätzlichen Jahresurlaub.", "Schwerbehinderte können nur mit Zustimmung der Hauptfürsorgestelle gekündigt werden.", "Betriebe sind verpflichtet, mindestens 5 % ihrer Arbeitsplätze mit Schwerbehinderten zu besetzen.", "Betriebe, die keine Schwerbehinderten beschäftigen, müssen eine Ausgleichsabgabe bezahlen.", "Für Schwerbehinderte gilt grundsätzlich eine kürzere Arbeitszeit."], correctText: "Schwerbehinderte können nur mit Zustimmung der Hauptfürsorgestelle gekündigt werden." },
+    { nr: 80, q: "Wo ist für alle Arbeitnehmer über 18 Jahre der gesetzliche Mindesturlaub geregelt?", e: "Richtig ist: Im Bundesurlaubsgesetz.", o: ["In der Gewerbeordnung", "Im Bundesurlaubsgesetz", "Im Betriebsverfassungsgesetz", "Im Jugendarbeitsschutzgesetz", "Im Arbeitszeitgesetz"], correctText: "Im Bundesurlaubsgesetz" },
+    { nr: 81, q: "Was soll durch betriebliche Maßnahmen zur Humanisierung der Arbeit erreicht werden?", e: "Richtig ist: Verringerung der körperlichen und seelischen Belastungen.", o: ["Abbau von Arbeitsplätzen", "Erhöhung des Gewinns des Unternehmens", "Senkung der Produktionskosten", "Verringerung der körperlichen und seelischen Belastungen", "Verringerung der Wochenarbeitszeit"], correctText: "Verringerung der körperlichen und seelischen Belastungen" },
+    { nr: 82, q: "Unter welcher Voraussetzung kann die zulässige werktägliche Arbeitszeit von acht auf 10 Stunden erhöht werden?", e: "Richtig ist: Wenn innerhalb von sechs Kalendermonaten im Durchschnitt acht Stunden werktäglich nicht überschritten werden.", o: ["Wenn der Arbeitnehmer die Verlängerung vom Arbeitgeber verlangt.", "Wenn innerhalb von sechs Kalendermonaten im Durchschnitt acht Stunden werktäglich nicht überschritten werden.", "Wenn die zusätzlichen zwei Stunden als Überstunden bezahlt werden.", "Wenn die zusätzlich gearbeiteten Stunden im Lauf des Kalenderjahres als Freizeit abgegolten werden.", "Wenn die Zeit von 10 Stunden im Arbeitsvertrag als Normalarbeitszeit vereinbart wird."], correctText: "Wenn innerhalb von sechs Kalendermonaten im Durchschnitt acht Stunden werktäglich nicht überschritten werden." },
+    { nr: 83, q: "Welche Institution ist gesetzlich beauftragt, Unfallverhütungsvorschriften zu erstellen?", e: "Richtig ist: Berufsgenossenschaft.", o: ["Gewerbeaufsichtsamt", "Technischer Überwachungsverein (TÜV)", "Landesarbeitsamt", "Landesregierung", "Berufsgenossenschaft"], correctText: "Berufsgenossenschaft" },
+    { nr: 84, q: "Die regelmäßige tägliche Arbeitszeit eines Arbeitnehmers über 18 Jahre beträgt 8 Stunden. Welche Ruhepause muss mindestens gegeben werden?", e: "Richtig ist: 30 Minuten.", o: ["15 min", "20 min", "30 min", "45 min", "60 min"], correctText: "30 min" },
+    { nr: 85, q: "Welche Aussage über die Sozialversicherungen ist richtig?", e: "Richtig ist: Die Versicherungen verwalten sich durch gewählte Organe selbst.", o: ["Die Versicherungen verwalten sich durch gewählte Organe selbst.", "Die Mitgliedschaft in den Sozialversicherungen ist freiwillig.", "Die Versicherungen werden vom Staat verwaltet.", "Versicherte, die innerhalb eines Jahres keine Leistungen beanspruchen, erhalten eine Beitragsrückerstattung.", "Die Höhe der Beiträge ist unabhängig von der Einkommenshöhe."], correctText: "Die Versicherungen verwalten sich durch gewählte Organe selbst." },
+    { nr: 86, q: "In welcher Zeile ist der Beitrag zur Versicherung zwischen Arbeitgeber und Arbeitnehmer richtig aufgeteilt?", e: "Richtig ist: Unfallversicherung: Arbeitgeber 100 %, Arbeitnehmer nichts.", o: ["Krankenversicherung: Arbeitgeber 30%, Arbeitnehmer 70%", "Krankenversicherung: Arbeitgeber –, Arbeitnehmer 100%", "Rentenversicherung: Arbeitgeber –, Arbeitnehmer 100%", "Arbeitslosenversicherung: Arbeitgeber 100%, Arbeitnehmer –", "Unfallversicherung: Arbeitgeber 100%, Arbeitnehmer –"], correctText: "Unfallversicherung: Arbeitgeber 100%, Arbeitnehmer –" },
+    { nr: 87, q: "Wer führt die Sozialversicherungsbeiträge für die beschäftigten Arbeitnehmer ab?", e: "Richtig ist: Der Arbeitgeber.", o: ["Der Arbeitgeber", "Der Arbeitnehmer", "Der Arbeitnehmer und der Arbeitgeber", "Das Finanzamt", "Das Arbeitsamt"], correctText: "Der Arbeitgeber" },
+    { nr: 88, q: "Welche Aussage über die gesetzliche Krankenversicherung ist richtig?", e: "Richtig ist: Der nicht berufstätige Ehepartner eines Versicherten ist mitversichert.", o: ["Den Beitrag zur Krankenversicherung trägt der Arbeitgeber allein.", "Die Höhe des Beitrags richtet sich nach der Höhe des Netto- bzw. des Nettogehalts des Arbeitnehmers.", "Die Höhe der Leistungen der Krankenversicherung ist abhängig von der Höhe der Beitragsleistung des Versicherten.", "Die Kosten für Hilfsmittel, z. B. Zahnersatz, trägt die Krankenversicherung in jedem Fall in voller Höhe.", "Der nicht berufstätige Ehepartner eines Versicherten ist mitversichert."], correctText: "Der nicht berufstätige Ehepartner eines Versicherten ist mitversichert." },
+    { nr: 89, q: "Welche Aussage über die Leistungen der gesetzlichen Krankenversicherung ist richtig?", e: "Richtig ist: Die von der Krankenkasse zu übernehmenden Regelleistungen sind gesetzlich vorgeschrieben.", o: ["Die von der Krankenkasse zu übernehmenden Regelleistungen sind gesetzlich vorgeschrieben.", "Mehrleistungen dürfen die Krankenkassen nur mit Genehmigung des Bundesarbeitsministers übernehmen.", "Leistungen dürfen nur an Versicherte, die länger als 6 Wochen Mitglied sind, gewährt werden.", "Der Umfang der Leistungen richtet sich nach der Höhe des Beitrags, den der Versicherte zahlt.", "Leistungen werden höchstens 26 Wochen gewährt."], correctText: "Die von der Krankenkasse zu übernehmenden Regelleistungen sind gesetzlich vorgeschrieben." },
+    { nr: 90, q: "Wonach richtet sich die Höhe des Beitrags zur gesetzlichen Krankenversicherung bei pflichtversicherten Arbeitnehmern?", e: "Richtig ist: Nach der Höhe des Bruttolohns bzw. Bruttogehalts.", o: ["Nach der Höhe des Bruttolohns bzw. Bruttogehalts.", "Nach der Verdiensthöhe und der Krankheitshäufigkeit.", "Nach dem Familienstand und der Anzahl der Familienmitglieder.", "Nach der Lohnhöhe und der Anzahl der Familienangehörigen.", "Nach der Höhe der gewünschten Leistungen."], correctText: "Nach der Höhe des Bruttolohns bzw. Bruttogehalts." },
+    { nr: 91, q: "Welche Aussage über die Zugehörigkeit eines versicherungspflichtigen Arbeitnehmers zu einer gesetzlichen Krankenkasse ist richtig?", e: "Richtig ist: Jeder Versicherungspflichtige kann seine Krankenkasse frei wählen.", o: ["Der Arbeitgeber entscheidet allein über die zuständige Krankenkasse.", "Jedem Wirtschaftszweig ist eine bestimmte Krankenkasse zugeordnet.", "Versicherungspflichtige Arbeitnehmer werden der Allgemeinen Ortskrankenkasse (AOK) zugeordnet.", "Jeder Versicherungspflichtige kann seine Krankenkasse frei wählen.", "Die Zuständigkeit der Krankenkasse ist im Tarifvertrag festgelegt."], correctText: "Jeder Versicherungspflichtige kann seine Krankenkasse frei wählen." },
+    { nr: 92, q: "Welchen Anteil vom Beitrag zur Arbeitslosenversicherung muss der Arbeitgeber bezahlen?", e: "Richtig ist: Die Hälfte des Beitrags.", o: ["Keinen", "Ein Viertel des Beitrags", "Die Hälfte des Beitrags", "Drei Viertel des Beitrags", "Den gesamten Beitrag"], correctText: "Die Hälfte des Beitrags" },
+    { nr: 93, q: "Wonach richtet sich die Höhe des Arbeitslosengeldes?", e: "Richtig ist: Nach dem pauschalierten Nettoverdienst.", o: ["Nach der Höhe der insgesamt entrichteten Beiträge", "Nach den insgesamt entrichteten Beiträgen und nach dem Lebensalter", "Nach dem pauschalierten Nettoverdienst", "Nach dem Lebensalter und nach der Anzahl der Familienangehörigen", "Nach der Anzahl der Beitragsjahre"], correctText: "Nach dem pauschalierten Nettoverdienst" },
+    { nr: 94, q: "Welche Leistungen erbringt die Rentenversicherung nicht?", e: "Richtig ist: Zahlung von Beihilfen, wenn noch kein Anspruch auf Arbeitslosengeld besteht.", o: ["Altersruhegeld, wenn die gesetzliche Altersgrenze erreicht wird.", "Kuren, um die Erwerbsfähigkeit zu sichern.", "Zahlung von Beihilfen, wenn noch kein Anspruch auf Arbeitslosengeld besteht.", "Hinterbliebenenrente.", "Zahlung einer Rente wegen Erwerbsminderung."], correctText: "Zahlung von Beihilfen, wenn noch kein Anspruch auf Arbeitslosengeld besteht." },
+    { nr: 95, q: "Wovon hängt die Höhe der Altersrente eines Arbeitnehmers ab?", e: "Richtig ist: Von der Anzahl der Beitragsjahre und dem Durchschnittseinkommen aller Arbeitnehmer.", o: ["Nur von der Anzahl der Beitragsjahre des Arbeitnehmers.", "Nur vom Durchschnittseinkommen des Arbeitnehmers während der letzten 5 Beitragsjahre.", "Von der Anzahl der Beitragsjahre des Arbeitnehmers.", "Von dem Durchschnittseinkommen des Arbeitnehmers.", "Von der Anzahl der Beitragsjahre und dem Durchschnittseinkommen aller Arbeitnehmer."], correctText: "Von der Anzahl der Beitragsjahre und dem Durchschnittseinkommen aller Arbeitnehmer." },
+    { nr: 96, q: "Wonach richtet sich die Höhe des Beitrags, den ein Arbeitnehmer für die Rentenversicherung zu entrichten hat?", e: "Richtig ist: Nach dem Bruttoverdienst des Arbeitnehmers.", o: ["Nach dem Nettoverdienst des Arbeitnehmers", "Nach dem Bruttoverdienst des Arbeitnehmers", "Nach dem Lebensalter des Arbeitnehmers", "Nach dem Nettoverdienst und dem Lebensalter", "Nach dem Bruttoverdienst und dem Lebensalter"], correctText: "Nach dem Bruttoverdienst des Arbeitnehmers" },
+    { nr: 97, q: "Welche Aussage über die Finanzierung der gesetzlichen Unfallversicherung ist richtig?", e: "Richtig ist: Die Finanzierung erfolgt allein durch die Beiträge der Arbeitgeber.", o: ["Die Finanzierung erfolgt je zur Hälfte durch die Beiträge der Arbeitgeber und Arbeitnehmer.", "Die Finanzierung erfolgt allein durch die Beiträge der Arbeitgeber.", "Die Finanzierung erfolgt allein durch den Staat.", "Die Finanzierung erfolgt durch die gesetzlichen Krankenkassen.", "Die Finanzierung erfolgt durch die Bundesanstalt für Arbeit."], correctText: "Die Finanzierung erfolgt allein durch die Beiträge der Arbeitgeber." },
+    { nr: 98, q: "Wie kommt das Versicherungsverhältnis eines Arbeitnehmers mit der gesetzlichen Unfallversicherung zustande?", e: "Richtig ist: Durch Abschluss des Arbeitsvertrages.", o: ["Durch den Abschluss des Versicherungsvertrags durch den Arbeitnehmer.", "Durch Abschluss des Versicherungsvertrags durch den Arbeitgeber.", "Durch Zahlung der ersten Prämie durch den Arbeitnehmer.", "Durch die Mitgliedschaft des Arbeitnehmers in einer Gewerkschaft.", "Durch Abschluss des Arbeitsvertrages."], correctText: "Durch Abschluss des Arbeitsvertrages." },
+    { nr: 99, q: "Welche der genannten Leistungen wird von der gesetzlichen Unfallversicherung nicht erbracht?", e: "Richtig ist: Zahlung von Krankengeld bei allgemeinen Erkrankungen.", o: ["Zahlung von Krankengeld bei allgemeinen Erkrankungen.", "Übernahme der Kosten für Heilbehandlung nach Arbeitsunfällen.", "Übernahme der Kosten der Umschulung bei Berufsunfähigkeit.", "Zahlung einer Verletztenrente nach Arbeitsunfällen.", "Zahlung einer Rente an Hinterbliebene von Unfallopfern."], correctText: "Zahlung von Krankengeld bei allgemeinen Erkrankungen." },
+    { nr: 100, q: "Herr Müller hat gelernt und wird nach der Abschlussprüfung arbeitslos. Hat er Anspruch auf Arbeitslosengeld?", e: "Richtig ist: Ja.", o: ["Nein, da Auszubildende keine Beiträge zahlen.", "Nein, da er noch keine Beiträge als Facharbeiter gezahlt hat.", "Nein, da er weniger als 4 Jahre beschäftigt war.", "Nein, da es in diesem Beruf noch offene Stellen gibt.", "Ja"], correctText: "Ja" },
+    { nr: 101, q: "Auf dem Weg in den Betrieb stürzt ein Arbeitnehmer. Wer trägt die Behandlungskosten?", e: "Richtig ist: Die Krankenkasse.", o: ["Der Arbeitgeber", "Der Arbeitnehmer", "Die Berufsgenossenschaft", "Die Haftpflichtversicherung", "Die Krankenkasse"], correctText: "Die Krankenkasse" },
+    { nr: 102, q: "Ein Arbeitnehmer möchte Ansprüche gegen die Berufsgenossenschaft durchsetzen. Vor welchem Gericht muss er Klage erheben?", e: "Richtig ist: Vor dem Sozialgericht.", o: ["Vor dem Amtsgericht", "Vor dem Arbeitsgericht", "Vor dem Verwaltungsgericht", "Vor dem Sozialgericht", "Vor dem Landgericht"], correctText: "Vor dem Sozialgericht" },
+    { nr: 103, q: "Welche Aussage über die Krankenversicherung von Arbeitslosen ist richtig?", e: "Richtig ist: Während der Arbeitslosigkeit bleibt der Arbeitslose Mitglied der Krankenkasse. Die Bundesanstalt für Arbeit übernimmt die Beitragszahlung.", o: ["Mit Beginn der Arbeitslosigkeit erlischt die gesetzliche Krankenversicherung.", "Den Beitrag zur Krankenversicherung muss der Arbeitnehmer drei Wochen lang weiterzahlen.", "Mit Beginn der Arbeitslosigkeit wird der Arbeitlose Mitglied der Allgemeinen Ortskrankenkasse.", "Während der Arbeitslosigkeit bleibt der Arbeitslose Mitglied der Krankenkasse. Die Bundesanstalt für Arbeit übernimmt die Beitragszahlung.", "Der Arbeitslose bleibt weiterhin Mitglied der Krankenkasse. Er muss jedoch die Hälfte selbst zahlen."], correctText: "Während der Arbeitslosigkeit bleibt der Arbeitslose Mitglied der Krankenkasse. Die Bundesanstalt für Arbeit übernimmt die Beitragszahlung." },
+    { nr: 104, q: "Welche Aussage über die Privatversicherungen ist richtig?", e: "Richtig ist: Die Prämien für die Privatversicherungen richten sich nach dem Bruttoverdienst des Versicherten.", o: ["Privatversicherungen werden freiwillig abgeschlossen.", "Die Prämien richten sich nach dem versicherten Risiko.", "Die Prämien für die Privatversicherungen richten sich nach dem Bruttoverdienst des Versicherten.", "Privatversicherungen gliedern sich in Personenversicherungen.", "Wer der Sozialversicherungspflicht unterliegt, kann zusätzlich Privatversicherungen abschließen."], correctText: "Die Prämien für die Privatversicherungen richten sich nach dem Bruttoverdienst des Versicherten." },
+    { nr: 105, q: "Welche der genannten Versicherungen gehört nicht zur Privatversicherung?", e: "Richtig ist: Arbeitslosenversicherung.", o: ["Lebensversicherung", "Private Krankenversicherung", "Arbeitslosenversicherung", "Rechtsschutzversicherung", "Private Haftpflichtversicherung"], correctText: "Arbeitslosenversicherung" }
+  ];
+
+  let cur = 0;
+  let activeQuestions = [];
+  let states = [];
+  let revealed = [];
+  let isCorrectList = [];
+  let isRepeatMode = false;
+
+  function shuffleArray(array) {
+    const copy = [...array];
+    for (let i = copy.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [copy[i], copy[j]] = [copy[j], copy[i]];
+    }
+    return copy;
+  }
+
+  // WICHTIG: Startet immer mit sortierter Liste 1-105
+  function showAllQuestions() {
+    activeQuestions = [...rawQuestions].sort((a, b) => a.nr - b.nr);
+    document.getElementById('modeLabel').innerText = "Feste Reihenfolge";
+    resetSession(false);
+  }
+
+  function showRandomOrder() {
+    activeQuestions = shuffleArray([...rawQuestions]);
+    document.getElementById('modeLabel').innerText = "Zufallsmodus";
+    resetSession(false);
+  }
+
+  function resetSession(repeat) {
+    cur = 0;
+    states = Array(activeQuestions.length).fill(null);
+    revealed = Array(activeQuestions.length).fill(false);
+    isCorrectList = Array(activeQuestions.length).fill(null);
+    isRepeatMode = repeat;
+    render();
+  }
+
+  function render() {
+    if (activeQuestions.length === 0) return;
+    const data = activeQuestions[cur];
+
+    document.getElementById('questionMeta').innerText = `Frage Nr. ${data.nr}`;
+    document.getElementById('qText').innerText = data.q;
+    document.getElementById('qn').innerText = cur + 1;
+    document.getElementById('total').innerText = activeQuestions.length;
+    document.getElementById('progressFill').style.width = ((cur + 1) / activeQuestions.length * 100) + "%";
+
+    const box = document.getElementById('ansBox');
+    box.innerHTML = "";
+
+    data.o.forEach((opt, i) => {
+      const b = document.createElement('button');
+      b.className = 'answer-btn';
+      if (states[cur] === opt) b.classList.add('selected');
+      if (revealed[cur]) {
+        if (opt === data.correctText) b.classList.add('correct');
+        else if (states[cur] === opt) b.classList.add('wrong');
+        b.disabled = true;
+      }
+      b.innerHTML = "<strong>" + String.fromCharCode(65 + i) + ".</strong> " + opt;
+      b.onclick = () => {
+        if (revealed[cur]) return;
+        states[cur] = opt;
+        revealed[cur] = true;
+        isCorrectList[cur] = (opt === data.correctText);
+        render();
+      };
+      box.appendChild(b);
+    });
+
+    const fb = document.getElementById('fbBox');
+    fb.style.display = revealed[cur] ? 'block' : 'none';
+    if (revealed[cur]) {
+      fb.innerHTML = `<div class="feedback"><strong>${isCorrectList[cur] ? '✅ Richtig!' : '❌ Falsch!'}</strong><br><br>${data.e}</div>`;
+    }
+
+    document.getElementById('btnPrev').disabled = cur === 0;
+    document.getElementById('btnNext').disabled = cur === activeQuestions.length - 1;
+    updateStats();
+    renderGrid();
+  }
+
+  function renderGrid() {
+    const g = document.getElementById('qGrid');
+    g.innerHTML = "";
+    activeQuestions.forEach((_, i) => {
+      const d = document.createElement('div');
+      d.className = 'grid-dot';
+      if (isCorrectList[i] === true) d.classList.add('correct');
+      else if (isCorrectList[i] === false) d.classList.add('wrong');
+      if (i === cur) d.classList.add('active');
+      d.innerText = i + 1;
+      d.onclick = () => { cur = i; render(); };
+      g.appendChild(d);
+    });
+  }
+
+  function updateStats() {
+    const answered = revealed.filter(Boolean).length;
+    const correct = isCorrectList.filter(x => x === true).length;
+    document.getElementById('statsCorrect').innerText = correct;
+    document.getElementById('statsWrong').innerText = answered - correct;
+  }
+
+  function changeQ(dir) {
+    cur = Math.max(0, Math.min(activeQuestions.length - 1, cur + dir));
+    render();
+  }
+
+  function startWrongRepeat() {
+    const wrongQs = activeQuestions.filter((_, i) => isCorrectList[i] === false);
+    if (wrongQs.length === 0) return alert("Keine falschen Fragen vorhanden!");
+    activeQuestions = shuffleArray(wrongQs);
+    document.getElementById('modeLabel').innerText = "Fehler-Wiederholung";
+    resetSession(true);
+  }
+
+  // Initialisierung
+  showAllQuestions();
+</script>
+</body>
+</html>
